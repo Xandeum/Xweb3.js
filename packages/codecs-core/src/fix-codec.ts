@@ -1,15 +1,7 @@
 import { assertByteArrayHasEnoughBytesForCodec } from './assertions';
 import { fixBytes } from './bytes';
-import { Codec, CodecData, createDecoder, createEncoder, Decoder, Encoder, Offset } from './codec';
+import { Codec, Decoder, Encoder, Offset } from './codec';
 import { combineCodec } from './combine-codec';
-
-function fixCodecHelper(data: CodecData, fixedBytes: number, description?: string): CodecData {
-    return {
-        description: description ?? `fixed(${fixedBytes}, ${data.description})`,
-        fixedSize: fixedBytes,
-        maxSize: fixedBytes,
-    };
-}
 
 /**
  * Creates a fixed-size encoder from a given encoder.
@@ -19,16 +11,16 @@ function fixCodecHelper(data: CodecData, fixedBytes: number, description?: strin
  * @param description - A custom description for the encoder.
  */
 export function fixEncoder<T>(encoder: Encoder<T>, fixedBytes: number, description?: string): Encoder<T> {
-    return createEncoder({
-        ...fixCodecHelper(encoder, fixedBytes, description),
-        getSize: () => fixedBytes,
-        write: (value: T, bytes: Uint8Array, offset: Offset) => {
+    return {
+        description: description ?? `fixed(${fixedBytes}, ${encoder.description})`,
+        encode: (value: T, bytes: Uint8Array, offset: Offset) => {
             const fixedByteArray = new Uint8Array(fixedBytes);
-            encoder.write(value, fixedByteArray, 0);
+            encoder.encode(value, fixedByteArray, 0);
             bytes.set(fixedByteArray, offset);
             return offset + fixedBytes;
         },
-    });
+        fixedSize: fixedBytes,
+    };
 }
 
 /**
@@ -39,9 +31,8 @@ export function fixEncoder<T>(encoder: Encoder<T>, fixedBytes: number, descripti
  * @param description - A custom description for the decoder.
  */
 export function fixDecoder<T>(decoder: Decoder<T>, fixedBytes: number, description?: string): Decoder<T> {
-    return createDecoder({
-        ...fixCodecHelper(decoder, fixedBytes, description),
-        read: (bytes: Uint8Array, offset: Offset) => {
+    return {
+        decode: (bytes: Uint8Array, offset: Offset) => {
             assertByteArrayHasEnoughBytesForCodec('fixCodec', fixedBytes, bytes, offset);
             // Slice the byte array to the fixed size if necessary.
             if (offset > 0 || bytes.length > fixedBytes) {
@@ -52,10 +43,12 @@ export function fixDecoder<T>(decoder: Decoder<T>, fixedBytes: number, descripti
                 bytes = fixBytes(bytes, decoder.fixedSize);
             }
             // Decode the value using the nested decoder.
-            const [value] = decoder.read(bytes, 0);
+            const [value] = decoder.decode(bytes, 0);
             return [value, offset + fixedBytes];
         },
-    });
+        description: description ?? `fixed(${fixedBytes}, ${decoder.description})`,
+        fixedSize: fixedBytes,
+    };
 }
 
 /**

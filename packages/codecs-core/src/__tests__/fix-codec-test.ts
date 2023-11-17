@@ -1,4 +1,4 @@
-import { Codec } from '../codec';
+import { Codec, decode, encode } from '../codec';
 import { fixCodec, fixDecoder, fixEncoder } from '../fix-codec';
 import { b, getMockCodec } from './__setup__';
 
@@ -7,10 +7,10 @@ describe('fixCodec', () => {
         const mockCodec = getMockCodec();
 
         mockCodec.encode.mockReturnValueOnce(b('08050c0c0f170f120c04'));
-        expect(fixCodec(mockCodec, 10).encode('helloworld')).toStrictEqual(b('08050c0c0f170f120c04'));
+        expect(encode('helloworld', fixCodec(mockCodec, 10))).toStrictEqual(b('08050c0c0f170f120c04'));
         expect(mockCodec.encode).toHaveBeenCalledWith('helloworld');
 
-        fixCodec(mockCodec, 10).decode(b('08050c0c0f170f120c04'));
+        decode(b('08050c0c0f170f120c04'), fixCodec(mockCodec, 10));
         expect(mockCodec.decode).toHaveBeenCalledWith(b('08050c0c0f170f120c04'), 0);
 
         fixCodec(mockCodec, 10).decode(b('ffff08050c0c0f170f120c04'), 2);
@@ -21,10 +21,10 @@ describe('fixCodec', () => {
         const mockCodec = getMockCodec();
 
         mockCodec.encode.mockReturnValueOnce(b('08050c0c0f170f120c04'));
-        expect(fixCodec(mockCodec, 5).encode('helloworld')).toStrictEqual(b('08050c0c0f'));
+        expect(encode('helloworld', fixCodec(mockCodec, 5))).toStrictEqual(b('08050c0c0f'));
         expect(mockCodec.encode).toHaveBeenCalledWith('helloworld');
 
-        fixCodec(mockCodec, 5).decode(b('08050c0c0f170f120c04'));
+        decode(b('08050c0c0f170f120c04'), fixCodec(mockCodec, 5));
         expect(mockCodec.decode).toHaveBeenCalledWith(b('08050c0c0f'), 0);
 
         fixCodec(mockCodec, 5).decode(b('ffff08050c0c0f170f120c04'), 2);
@@ -35,16 +35,16 @@ describe('fixCodec', () => {
         const mockCodec = getMockCodec();
 
         mockCodec.encode.mockReturnValueOnce(b('08050c0c0f'));
-        expect(fixCodec(mockCodec, 10).encode('hello')).toStrictEqual(b('08050c0c0f0000000000'));
+        expect(encode('hello', fixCodec(mockCodec, 10))).toStrictEqual(b('08050c0c0f0000000000'));
         expect(mockCodec.encode).toHaveBeenCalledWith('hello');
 
-        fixCodec(mockCodec, 10).decode(b('08050c0c0f0000000000'));
+        decode(b('08050c0c0f0000000000'), fixCodec(mockCodec, 10));
         expect(mockCodec.decode).toHaveBeenCalledWith(b('08050c0c0f0000000000'), 0);
 
         fixCodec(mockCodec, 10).decode(b('ffff08050c0c0f0000000000'), 2);
         expect(mockCodec.decode).toHaveBeenCalledWith(b('08050c0c0f0000000000'), 0);
 
-        expect(() => fixCodec(mockCodec, 10).decode(b('08050c0c0f'))).toThrow(
+        expect(() => decode(b('08050c0c0f'), fixCodec(mockCodec, 10))).toThrow(
             'Codec [fixCodec] expected 10 bytes, got 5.'
         );
     });
@@ -62,9 +62,7 @@ describe('fixCodec', () => {
     it('has the right sizes', () => {
         const mockCodec = getMockCodec({ size: null });
         expect(fixCodec(mockCodec, 12).fixedSize).toBe(12);
-        expect(fixCodec(mockCodec, 12).maxSize).toBe(12);
         expect(fixCodec(mockCodec, 42).fixedSize).toBe(42);
-        expect(fixCodec(mockCodec, 42).maxSize).toBe(42);
     });
 
     it('can fix a codec that requires a minimum amount of bytes', () => {
@@ -78,20 +76,22 @@ describe('fixCodec', () => {
                 return [bytes.slice(offset)[0], offset + 4];
             },
             description: 'u32',
-            encode: (value: number) => new Uint8Array([value, 0, 0, 0]),
+            encode: (value: number, bytes, offset) => {
+                bytes.set([value], offset);
+                return offset + 4;
+            },
             fixedSize: 4,
-            maxSize: 4,
         };
 
         // When we synthesize a `u24` from that `u32` using `fixCodec`.
         const u24 = fixCodec(u32, 3);
 
         // Then we can encode a `u24`.
-        const buf = u24.encode(42);
+        const buf = encode(42, u24);
         expect(buf).toStrictEqual(new Uint8Array([42, 0, 0]));
 
         // And we can decode it back.
-        const hydrated = u24.decode(buf);
+        const hydrated = decode(buf, u24);
         expect(hydrated).toStrictEqual([42, 3]);
     });
 });
@@ -101,15 +101,15 @@ describe('fixEncoder', () => {
         const mockCodec = getMockCodec();
 
         mockCodec.encode.mockReturnValueOnce(b('08050c0c0f170f120c04'));
-        expect(fixEncoder(mockCodec, 10).encode('helloworld')).toStrictEqual(b('08050c0c0f170f120c04'));
+        expect(encode('helloworld', fixEncoder(mockCodec, 10))).toStrictEqual(b('08050c0c0f170f120c04'));
         expect(mockCodec.encode).toHaveBeenCalledWith('helloworld');
 
         mockCodec.encode.mockReturnValueOnce(b('08050c0c0f170f120c04'));
-        expect(fixEncoder(mockCodec, 5).encode('helloworld')).toStrictEqual(b('08050c0c0f'));
+        expect(encode('helloworld', fixEncoder(mockCodec, 5))).toStrictEqual(b('08050c0c0f'));
         expect(mockCodec.encode).toHaveBeenCalledWith('helloworld');
 
         mockCodec.encode.mockReturnValueOnce(b('08050c0c0f'));
-        expect(fixEncoder(mockCodec, 10).encode('hello')).toStrictEqual(b('08050c0c0f0000000000'));
+        expect(encode('hello', fixEncoder(mockCodec, 10))).toStrictEqual(b('08050c0c0f0000000000'));
         expect(mockCodec.encode).toHaveBeenCalledWith('hello');
     });
 });
@@ -118,16 +118,16 @@ describe('fixDecoder', () => {
     it('can fix a decoder to a given amount of bytes', () => {
         const mockCodec = getMockCodec();
 
-        fixDecoder(mockCodec, 10).decode(b('08050c0c0f170f120c04'));
+        decode(b('08050c0c0f170f120c04'), fixDecoder(mockCodec, 10));
         expect(mockCodec.decode).toHaveBeenCalledWith(b('08050c0c0f170f120c04'), 0);
 
-        fixDecoder(mockCodec, 5).decode(b('08050c0c0f170f120c04'));
+        decode(b('08050c0c0f170f120c04'), fixDecoder(mockCodec, 5));
         expect(mockCodec.decode).toHaveBeenCalledWith(b('08050c0c0f'), 0);
 
-        fixDecoder(mockCodec, 10).decode(b('08050c0c0f0000000000'));
+        decode(b('08050c0c0f0000000000'), fixDecoder(mockCodec, 10));
         expect(mockCodec.decode).toHaveBeenCalledWith(b('08050c0c0f0000000000'), 0);
 
-        expect(() => fixDecoder(mockCodec, 10).decode(b('08050c0c0f'))).toThrow(
+        expect(() => decode(b('08050c0c0f'), fixDecoder(mockCodec, 10))).toThrow(
             'Codec [fixCodec] expected 10 bytes, got 5.'
         );
     });

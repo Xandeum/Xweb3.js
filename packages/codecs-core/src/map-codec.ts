@@ -1,14 +1,15 @@
-import { Codec, createCodec, createDecoder, createEncoder, Decoder, Encoder } from './codec';
+import { Codec, Decoder, Encoder } from './codec';
 
 /**
  * Converts an encoder A to a encoder B by mapping their values.
  */
 export function mapEncoder<T, U>(encoder: Encoder<T>, unmap: (value: U) => T): Encoder<U> {
-    return createEncoder({
-        ...encoder,
-        getSize: (value: U) => encoder.getSize(unmap(value)),
-        write: (value: U, bytes, offset) => encoder.write(unmap(value), bytes, offset),
-    });
+    return {
+        ...(encoder.fixedSize === null
+            ? { ...encoder, variableSize: (value: U) => encoder.variableSize(unmap(value)) }
+            : encoder),
+        encode: (value: U, bytes, offset) => encoder.encode(unmap(value), bytes, offset),
+    };
 }
 
 /**
@@ -18,13 +19,13 @@ export function mapDecoder<T, U>(
     decoder: Decoder<T>,
     map: (value: T, bytes: Uint8Array, offset: number) => U
 ): Decoder<U> {
-    return createDecoder({
+    return {
         ...decoder,
-        read: (bytes: Uint8Array, offset = 0) => {
-            const [value, newOffset] = decoder.read(bytes, offset);
+        decode: (bytes: Uint8Array, offset = 0) => {
+            const [value, newOffset] = decoder.decode(bytes, offset);
             return [map(value, bytes, offset), newOffset];
         },
-    });
+    };
 }
 
 /**
@@ -44,10 +45,8 @@ export function mapCodec<NewFrom, OldFrom, NewTo extends NewFrom = NewFrom, OldT
     unmap: (value: NewFrom) => OldFrom,
     map?: (value: OldTo, bytes: Uint8Array, offset: number) => NewTo
 ): Codec<NewFrom, NewTo> {
-    return createCodec({
-        ...codec,
-        getSize: mapEncoder(codec, unmap).getSize,
-        read: map ? mapDecoder(codec, map).read : (codec.read as unknown as Decoder<NewTo>['read']),
-        write: mapEncoder(codec, unmap).write,
-    });
+    return {
+        ...mapEncoder(codec, unmap),
+        decode: map ? mapDecoder(codec, map).decode : (codec.decode as unknown as Decoder<NewTo>['decode']),
+    };
 }

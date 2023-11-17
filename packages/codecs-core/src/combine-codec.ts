@@ -17,7 +17,7 @@ export function combineCodec<From, To extends From = From>(
         );
     }
 
-    if (encoder.maxSize !== decoder.maxSize) {
+    if (encoder.fixedSize === null && decoder.fixedSize === null && encoder.maxSize !== decoder.maxSize) {
         // TODO: Coded error.
         throw new Error(
             `Encoder and decoder must have the same max size, got [${encoder.maxSize}] and [${decoder.maxSize}].`
@@ -36,10 +36,8 @@ export function combineCodec<From, To extends From = From>(
         decode: decoder.decode,
         description: description ?? encoder.description,
         encode: encoder.encode,
-        fixedSize: encoder.fixedSize,
-        getSize: encoder.getSize,
-        maxSize: encoder.maxSize,
-        read: decoder.read,
-        write: encoder.write,
+        ...(encoder.fixedSize === null
+            ? { fixedSize: null, maxSize: encoder.maxSize, variableSize: encoder.variableSize }
+            : { fixedSize: encoder.fixedSize }),
     };
 }
