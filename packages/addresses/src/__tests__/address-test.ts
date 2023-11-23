@@ -1,7 +1,7 @@
 import { Encoder } from '@solana/codecs-core';
 import { getBase58Decoder, getBase58Encoder } from '@solana/codecs-strings';
 
-import { Address, getAddressCodec, getAddressComparator } from '../address';
+import { Address, getAddressCodec, getAddressComparator } from '../address.js';
 
 jest.mock('@solana/codecs-strings', () => ({
     ...jest.requireActual('@solana/codecs-strings'),
