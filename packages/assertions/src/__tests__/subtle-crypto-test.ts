@@ -3,7 +3,7 @@ import {
     assertKeyExporterIsAvailable,
     assertSigningCapabilityIsAvailable,
     assertVerificationCapabilityIsAvailable,
-} from '../subtle-crypto';
+} from '../subtle-crypto.js';
 
 describe('assertDigestCapabilityIsAvailable()', () => {
     it('resolves to `undefined` without throwing', async () => {
