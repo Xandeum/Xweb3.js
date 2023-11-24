@@ -1,4 +1,4 @@
-import { PendingRpcSubscription, RpcSubscriptions } from '@solana/rpc-transport/dist/types/json-rpc-types';
+import { PendingRpcSubscription, RpcSubscriptions } from '@solana/rpc-transport';
 
 import { getCachedAbortableIterableFactory } from './cached-abortable-iterable';
 
@@ -12,7 +12,7 @@ type GetDeduplicationKeyFn = (subscriptionMethod: string | symbol, payload: unkn
 const EXPLICIT_ABORT_TOKEN = Symbol(
     __DEV__
         ? "This symbol is thrown from a subscription's iterator when the subscription is " +
-              'explicitly aborted by the user'
+        'explicitly aborted by the user'
         : undefined
 );
 
@@ -99,10 +99,10 @@ export function getRpcSubscriptionsWithSubscriptionCoalescing<TRpcSubscriptionsM
                                 abortPromise ||= abortSignal.aborted
                                     ? Promise.reject(EXPLICIT_ABORT_TOKEN)
                                     : new Promise<never>((_, reject) => {
-                                          abortSignal.addEventListener('abort', () => {
-                                              reject(EXPLICIT_ABORT_TOKEN);
-                                          });
-                                      });
+                                        abortSignal.addEventListener('abort', () => {
+                                            reject(EXPLICIT_ABORT_TOKEN);
+                                        });
+                                    });
                                 try {
                                     const iterator = iterable[Symbol.asyncIterator]();
                                     while (true) {
