@@ -52,8 +52,8 @@ export function createSolanaRpcSubscriptionsApi(
                 ...rawParams: Parameters<
                     (SolanaRpcSubscriptions &
                         SolanaRpcSubscriptionsUnstable)[TNotificationName] extends CallableFunction
-                    ? (SolanaRpcSubscriptions & SolanaRpcSubscriptionsUnstable)[TNotificationName]
-                    : never
+                        ? (SolanaRpcSubscriptions & SolanaRpcSubscriptionsUnstable)[TNotificationName]
+                        : never
                 >
             ): RpcSubscription<
                 ReturnType<(SolanaRpcSubscriptions & SolanaRpcSubscriptionsUnstable)[TNotificationName]>
