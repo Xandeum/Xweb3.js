@@ -68,8 +68,8 @@ type ApiMethodImplementations<TRpcMethods, TMethod extends keyof TRpcMethods> = 
 type PendingRpcRequestReturnTypeMapper<TMethodImplementation> =
     // Check that this property of the TRpcMethods interface is, in fact, a function.
     TMethodImplementation extends Callable
-        ? (...args: Parameters<TMethodImplementation>) => PendingRpcRequest<ReturnType<TMethodImplementation>>
-        : never;
+    ? (...args: Parameters<TMethodImplementation>) => PendingRpcRequest<ReturnType<TMethodImplementation>>
+    : never;
 type PendingRpcRequestBuilder<TMethodImplementations> = UnionToIntersection<
     Flatten<{
         [P in keyof TMethodImplementations]: PendingRpcRequestReturnTypeMapper<TMethodImplementations[P]>;
@@ -78,10 +78,10 @@ type PendingRpcRequestBuilder<TMethodImplementations> = UnionToIntersection<
 type PendingRpcSubscriptionReturnTypeMapper<TSubscriptionMethodImplementation> =
     // Check that this property of the TRpcSubscriptionMethods interface is, in fact, a function.
     TSubscriptionMethodImplementation extends Callable
-        ? (
-              ...args: Parameters<TSubscriptionMethodImplementation>
-          ) => PendingRpcSubscription<ReturnType<TSubscriptionMethodImplementation>>
-        : never;
+    ? (
+        ...args: Parameters<TSubscriptionMethodImplementation>
+    ) => PendingRpcSubscription<ReturnType<TSubscriptionMethodImplementation>>
+    : never;
 type PendingRpcSubscriptionBuilder<TSubscriptionMethodImplementations> = UnionToIntersection<
     Flatten<{
         [P in keyof TSubscriptionMethodImplementations]: PendingRpcSubscriptionReturnTypeMapper<
@@ -125,33 +125,33 @@ type Overloads24<T> =
         (...args: infer A23): infer R23;
         (...args: infer A24): infer R24;
     }
-        ? [
-              (...args: A1) => R1,
-              (...args: A2) => R2,
-              (...args: A3) => R3,
-              (...args: A4) => R4,
-              (...args: A5) => R5,
-              (...args: A6) => R6,
-              (...args: A7) => R7,
-              (...args: A8) => R8,
-              (...args: A9) => R9,
-              (...args: A10) => R10,
-              (...args: A11) => R11,
-              (...args: A12) => R12,
-              (...args: A13) => R13,
-              (...args: A14) => R14,
-              (...args: A15) => R15,
-              (...args: A16) => R16,
-              (...args: A17) => R17,
-              (...args: A18) => R18,
-              (...args: A19) => R19,
-              (...args: A20) => R20,
-              (...args: A21) => R21,
-              (...args: A22) => R22,
-              (...args: A23) => R23,
-              (...args: A24) => R24
-          ]
-        : Overloads23<T>;
+    ? [
+        (...args: A1) => R1,
+        (...args: A2) => R2,
+        (...args: A3) => R3,
+        (...args: A4) => R4,
+        (...args: A5) => R5,
+        (...args: A6) => R6,
+        (...args: A7) => R7,
+        (...args: A8) => R8,
+        (...args: A9) => R9,
+        (...args: A10) => R10,
+        (...args: A11) => R11,
+        (...args: A12) => R12,
+        (...args: A13) => R13,
+        (...args: A14) => R14,
+        (...args: A15) => R15,
+        (...args: A16) => R16,
+        (...args: A17) => R17,
+        (...args: A18) => R18,
+        (...args: A19) => R19,
+        (...args: A20) => R20,
+        (...args: A21) => R21,
+        (...args: A22) => R22,
+        (...args: A23) => R23,
+        (...args: A24) => R24
+    ]
+    : Overloads23<T>;
 type Overloads23<T> = T extends {
     (...args: infer A1): infer R1;
     (...args: infer A2): infer R2;
@@ -178,30 +178,30 @@ type Overloads23<T> = T extends {
     (...args: infer A23): infer R23;
 }
     ? [
-          (...args: A1) => R1,
-          (...args: A2) => R2,
-          (...args: A3) => R3,
-          (...args: A4) => R4,
-          (...args: A5) => R5,
-          (...args: A6) => R6,
-          (...args: A7) => R7,
-          (...args: A8) => R8,
-          (...args: A9) => R9,
-          (...args: A10) => R10,
-          (...args: A11) => R11,
-          (...args: A12) => R12,
-          (...args: A13) => R13,
-          (...args: A14) => R14,
-          (...args: A15) => R15,
-          (...args: A16) => R16,
-          (...args: A17) => R17,
-          (...args: A18) => R18,
-          (...args: A19) => R19,
-          (...args: A20) => R20,
-          (...args: A21) => R21,
-          (...args: A22) => R22,
-          (...args: A23) => R23
-      ]
+        (...args: A1) => R1,
+        (...args: A2) => R2,
+        (...args: A3) => R3,
+        (...args: A4) => R4,
+        (...args: A5) => R5,
+        (...args: A6) => R6,
+        (...args: A7) => R7,
+        (...args: A8) => R8,
+        (...args: A9) => R9,
+        (...args: A10) => R10,
+        (...args: A11) => R11,
+        (...args: A12) => R12,
+        (...args: A13) => R13,
+        (...args: A14) => R14,
+        (...args: A15) => R15,
+        (...args: A16) => R16,
+        (...args: A17) => R17,
+        (...args: A18) => R18,
+        (...args: A19) => R19,
+        (...args: A20) => R20,
+        (...args: A21) => R21,
+        (...args: A22) => R22,
+        (...args: A23) => R23
+    ]
     : Overloads22<T>;
 type Overloads22<T> = T extends {
     (...args: infer A1): infer R1;
@@ -228,29 +228,29 @@ type Overloads22<T> = T extends {
     (...args: infer A22): infer R22;
 }
     ? [
-          (...args: A1) => R1,
-          (...args: A2) => R2,
-          (...args: A3) => R3,
-          (...args: A4) => R4,
-          (...args: A5) => R5,
-          (...args: A6) => R6,
-          (...args: A7) => R7,
-          (...args: A8) => R8,
-          (...args: A9) => R9,
-          (...args: A10) => R10,
-          (...args: A11) => R11,
-          (...args: A12) => R12,
-          (...args: A13) => R13,
-          (...args: A14) => R14,
-          (...args: A15) => R15,
-          (...args: A16) => R16,
-          (...args: A17) => R17,
-          (...args: A18) => R18,
-          (...args: A19) => R19,
-          (...args: A20) => R20,
-          (...args: A21) => R21,
-          (...args: A22) => R22
-      ]
+        (...args: A1) => R1,
+        (...args: A2) => R2,
+        (...args: A3) => R3,
+        (...args: A4) => R4,
+        (...args: A5) => R5,
+        (...args: A6) => R6,
+        (...args: A7) => R7,
+        (...args: A8) => R8,
+        (...args: A9) => R9,
+        (...args: A10) => R10,
+        (...args: A11) => R11,
+        (...args: A12) => R12,
+        (...args: A13) => R13,
+        (...args: A14) => R14,
+        (...args: A15) => R15,
+        (...args: A16) => R16,
+        (...args: A17) => R17,
+        (...args: A18) => R18,
+        (...args: A19) => R19,
+        (...args: A20) => R20,
+        (...args: A21) => R21,
+        (...args: A22) => R22
+    ]
     : Overloads21<T>;
 type Overloads21<T> = T extends {
     (...args: infer A1): infer R1;
@@ -276,28 +276,28 @@ type Overloads21<T> = T extends {
     (...args: infer A21): infer R21;
 }
     ? [
-          (...args: A1) => R1,
-          (...args: A2) => R2,
-          (...args: A3) => R3,
-          (...args: A4) => R4,
-          (...args: A5) => R5,
-          (...args: A6) => R6,
-          (...args: A7) => R7,
-          (...args: A8) => R8,
-          (...args: A9) => R9,
-          (...args: A10) => R10,
-          (...args: A11) => R11,
-          (...args: A12) => R12,
-          (...args: A13) => R13,
-          (...args: A14) => R14,
-          (...args: A15) => R15,
-          (...args: A16) => R16,
-          (...args: A17) => R17,
-          (...args: A18) => R18,
-          (...args: A19) => R19,
-          (...args: A20) => R20,
-          (...args: A21) => R21
-      ]
+        (...args: A1) => R1,
+        (...args: A2) => R2,
+        (...args: A3) => R3,
+        (...args: A4) => R4,
+        (...args: A5) => R5,
+        (...args: A6) => R6,
+        (...args: A7) => R7,
+        (...args: A8) => R8,
+        (...args: A9) => R9,
+        (...args: A10) => R10,
+        (...args: A11) => R11,
+        (...args: A12) => R12,
+        (...args: A13) => R13,
+        (...args: A14) => R14,
+        (...args: A15) => R15,
+        (...args: A16) => R16,
+        (...args: A17) => R17,
+        (...args: A18) => R18,
+        (...args: A19) => R19,
+        (...args: A20) => R20,
+        (...args: A21) => R21
+    ]
     : Overloads20<T>;
 type Overloads20<T> = T extends {
     (...args: infer A1): infer R1;
@@ -322,27 +322,27 @@ type Overloads20<T> = T extends {
     (...args: infer A20): infer R20;
 }
     ? [
-          (...args: A1) => R1,
-          (...args: A2) => R2,
-          (...args: A3) => R3,
-          (...args: A4) => R4,
-          (...args: A5) => R5,
-          (...args: A6) => R6,
-          (...args: A7) => R7,
-          (...args: A8) => R8,
-          (...args: A9) => R9,
-          (...args: A10) => R10,
-          (...args: A11) => R11,
-          (...args: A12) => R12,
-          (...args: A13) => R13,
-          (...args: A14) => R14,
-          (...args: A15) => R15,
-          (...args: A16) => R16,
-          (...args: A17) => R17,
-          (...args: A18) => R18,
-          (...args: A19) => R19,
-          (...args: A20) => R20
-      ]
+        (...args: A1) => R1,
+        (...args: A2) => R2,
+        (...args: A3) => R3,
+        (...args: A4) => R4,
+        (...args: A5) => R5,
+        (...args: A6) => R6,
+        (...args: A7) => R7,
+        (...args: A8) => R8,
+        (...args: A9) => R9,
+        (...args: A10) => R10,
+        (...args: A11) => R11,
+        (...args: A12) => R12,
+        (...args: A13) => R13,
+        (...args: A14) => R14,
+        (...args: A15) => R15,
+        (...args: A16) => R16,
+        (...args: A17) => R17,
+        (...args: A18) => R18,
+        (...args: A19) => R19,
+        (...args: A20) => R20
+    ]
     : Overloads19<T>;
 type Overloads19<T> = T extends {
     (...args: infer A1): infer R1;
@@ -366,26 +366,26 @@ type Overloads19<T> = T extends {
     (...args: infer A19): infer R19;
 }
     ? [
-          (...args: A1) => R1,
-          (...args: A2) => R2,
-          (...args: A3) => R3,
-          (...args: A4) => R4,
-          (...args: A5) => R5,
-          (...args: A6) => R6,
-          (...args: A7) => R7,
-          (...args: A8) => R8,
-          (...args: A9) => R9,
-          (...args: A10) => R10,
-          (...args: A11) => R11,
-          (...args: A12) => R12,
-          (...args: A13) => R13,
-          (...args: A14) => R14,
-          (...args: A15) => R15,
-          (...args: A16) => R16,
-          (...args: A17) => R17,
-          (...args: A18) => R18,
-          (...args: A19) => R19
-      ]
+        (...args: A1) => R1,
+        (...args: A2) => R2,
+        (...args: A3) => R3,
+        (...args: A4) => R4,
+        (...args: A5) => R5,
+        (...args: A6) => R6,
+        (...args: A7) => R7,
+        (...args: A8) => R8,
+        (...args: A9) => R9,
+        (...args: A10) => R10,
+        (...args: A11) => R11,
+        (...args: A12) => R12,
+        (...args: A13) => R13,
+        (...args: A14) => R14,
+        (...args: A15) => R15,
+        (...args: A16) => R16,
+        (...args: A17) => R17,
+        (...args: A18) => R18,
+        (...args: A19) => R19
+    ]
     : Overloads18<T>;
 type Overloads18<T> = T extends {
     (...args: infer A1): infer R1;
@@ -408,25 +408,25 @@ type Overloads18<T> = T extends {
     (...args: infer A18): infer R18;
 }
     ? [
-          (...args: A1) => R1,
-          (...args: A2) => R2,
-          (...args: A3) => R3,
-          (...args: A4) => R4,
-          (...args: A5) => R5,
-          (...args: A6) => R6,
-          (...args: A7) => R7,
-          (...args: A8) => R8,
-          (...args: A9) => R9,
-          (...args: A10) => R10,
-          (...args: A11) => R11,
-          (...args: A12) => R12,
-          (...args: A13) => R13,
-          (...args: A14) => R14,
-          (...args: A15) => R15,
-          (...args: A16) => R16,
-          (...args: A17) => R17,
-          (...args: A18) => R18
-      ]
+        (...args: A1) => R1,
+        (...args: A2) => R2,
+        (...args: A3) => R3,
+        (...args: A4) => R4,
+        (...args: A5) => R5,
+        (...args: A6) => R6,
+        (...args: A7) => R7,
+        (...args: A8) => R8,
+        (...args: A9) => R9,
+        (...args: A10) => R10,
+        (...args: A11) => R11,
+        (...args: A12) => R12,
+        (...args: A13) => R13,
+        (...args: A14) => R14,
+        (...args: A15) => R15,
+        (...args: A16) => R16,
+        (...args: A17) => R17,
+        (...args: A18) => R18
+    ]
     : Overloads17<T>;
 type Overloads17<T> = T extends {
     (...args: infer A1): infer R1;
@@ -448,24 +448,24 @@ type Overloads17<T> = T extends {
     (...args: infer A17): infer R17;
 }
     ? [
-          (...args: A1) => R1,
-          (...args: A2) => R2,
-          (...args: A3) => R3,
-          (...args: A4) => R4,
-          (...args: A5) => R5,
-          (...args: A6) => R6,
-          (...args: A7) => R7,
-          (...args: A8) => R8,
-          (...args: A9) => R9,
-          (...args: A10) => R10,
-          (...args: A11) => R11,
-          (...args: A12) => R12,
-          (...args: A13) => R13,
-          (...args: A14) => R14,
-          (...args: A15) => R15,
-          (...args: A16) => R16,
-          (...args: A17) => R17
-      ]
+        (...args: A1) => R1,
+        (...args: A2) => R2,
+        (...args: A3) => R3,
+        (...args: A4) => R4,
+        (...args: A5) => R5,
+        (...args: A6) => R6,
+        (...args: A7) => R7,
+        (...args: A8) => R8,
+        (...args: A9) => R9,
+        (...args: A10) => R10,
+        (...args: A11) => R11,
+        (...args: A12) => R12,
+        (...args: A13) => R13,
+        (...args: A14) => R14,
+        (...args: A15) => R15,
+        (...args: A16) => R16,
+        (...args: A17) => R17
+    ]
     : Overloads16<T>;
 type Overloads16<T> = T extends {
     (...args: infer A1): infer R1;
@@ -486,23 +486,23 @@ type Overloads16<T> = T extends {
     (...args: infer A16): infer R16;
 }
     ? [
-          (...args: A1) => R1,
-          (...args: A2) => R2,
-          (...args: A3) => R3,
-          (...args: A4) => R4,
-          (...args: A5) => R5,
-          (...args: A6) => R6,
-          (...args: A7) => R7,
-          (...args: A8) => R8,
-          (...args: A9) => R9,
-          (...args: A10) => R10,
-          (...args: A11) => R11,
-          (...args: A12) => R12,
-          (...args: A13) => R13,
-          (...args: A14) => R14,
-          (...args: A15) => R15,
-          (...args: A16) => R16
-      ]
+        (...args: A1) => R1,
+        (...args: A2) => R2,
+        (...args: A3) => R3,
+        (...args: A4) => R4,
+        (...args: A5) => R5,
+        (...args: A6) => R6,
+        (...args: A7) => R7,
+        (...args: A8) => R8,
+        (...args: A9) => R9,
+        (...args: A10) => R10,
+        (...args: A11) => R11,
+        (...args: A12) => R12,
+        (...args: A13) => R13,
+        (...args: A14) => R14,
+        (...args: A15) => R15,
+        (...args: A16) => R16
+    ]
     : Overloads15<T>;
 type Overloads15<T> = T extends {
     (...args: infer A1): infer R1;
@@ -522,22 +522,22 @@ type Overloads15<T> = T extends {
     (...args: infer A15): infer R15;
 }
     ? [
-          (...args: A1) => R1,
-          (...args: A2) => R2,
-          (...args: A3) => R3,
-          (...args: A4) => R4,
-          (...args: A5) => R5,
-          (...args: A6) => R6,
-          (...args: A7) => R7,
-          (...args: A8) => R8,
-          (...args: A9) => R9,
-          (...args: A10) => R10,
-          (...args: A11) => R11,
-          (...args: A12) => R12,
-          (...args: A13) => R13,
-          (...args: A14) => R14,
-          (...args: A15) => R15
-      ]
+        (...args: A1) => R1,
+        (...args: A2) => R2,
+        (...args: A3) => R3,
+        (...args: A4) => R4,
+        (...args: A5) => R5,
+        (...args: A6) => R6,
+        (...args: A7) => R7,
+        (...args: A8) => R8,
+        (...args: A9) => R9,
+        (...args: A10) => R10,
+        (...args: A11) => R11,
+        (...args: A12) => R12,
+        (...args: A13) => R13,
+        (...args: A14) => R14,
+        (...args: A15) => R15
+    ]
     : Overloads14<T>;
 type Overloads14<T> = T extends {
     (...args: infer A1): infer R1;
@@ -556,21 +556,21 @@ type Overloads14<T> = T extends {
     (...args: infer A14): infer R14;
 }
     ? [
-          (...args: A1) => R1,
-          (...args: A2) => R2,
-          (...args: A3) => R3,
-          (...args: A4) => R4,
-          (...args: A5) => R5,
-          (...args: A6) => R6,
-          (...args: A7) => R7,
-          (...args: A8) => R8,
-          (...args: A9) => R9,
-          (...args: A10) => R10,
-          (...args: A11) => R11,
-          (...args: A12) => R12,
-          (...args: A13) => R13,
-          (...args: A14) => R14
-      ]
+        (...args: A1) => R1,
+        (...args: A2) => R2,
+        (...args: A3) => R3,
+        (...args: A4) => R4,
+        (...args: A5) => R5,
+        (...args: A6) => R6,
+        (...args: A7) => R7,
+        (...args: A8) => R8,
+        (...args: A9) => R9,
+        (...args: A10) => R10,
+        (...args: A11) => R11,
+        (...args: A12) => R12,
+        (...args: A13) => R13,
+        (...args: A14) => R14
+    ]
     : Overloads13<T>;
 type Overloads13<T> = T extends {
     (...args: infer A1): infer R1;
@@ -588,20 +588,20 @@ type Overloads13<T> = T extends {
     (...args: infer A13): infer R13;
 }
     ? [
-          (...args: A1) => R1,
-          (...args: A2) => R2,
-          (...args: A3) => R3,
-          (...args: A4) => R4,
-          (...args: A5) => R5,
-          (...args: A6) => R6,
-          (...args: A7) => R7,
-          (...args: A8) => R8,
-          (...args: A9) => R9,
-          (...args: A10) => R10,
-          (...args: A11) => R11,
-          (...args: A12) => R12,
-          (...args: A13) => R13
-      ]
+        (...args: A1) => R1,
+        (...args: A2) => R2,
+        (...args: A3) => R3,
+        (...args: A4) => R4,
+        (...args: A5) => R5,
+        (...args: A6) => R6,
+        (...args: A7) => R7,
+        (...args: A8) => R8,
+        (...args: A9) => R9,
+        (...args: A10) => R10,
+        (...args: A11) => R11,
+        (...args: A12) => R12,
+        (...args: A13) => R13
+    ]
     : Overloads12<T>;
 type Overloads12<T> = T extends {
     (...args: infer A1): infer R1;
@@ -618,19 +618,19 @@ type Overloads12<T> = T extends {
     (...args: infer A12): infer R12;
 }
     ? [
-          (...args: A1) => R1,
-          (...args: A2) => R2,
-          (...args: A3) => R3,
-          (...args: A4) => R4,
-          (...args: A5) => R5,
-          (...args: A6) => R6,
-          (...args: A7) => R7,
-          (...args: A8) => R8,
-          (...args: A9) => R9,
-          (...args: A10) => R10,
-          (...args: A11) => R11,
-          (...args: A12) => R12
-      ]
+        (...args: A1) => R1,
+        (...args: A2) => R2,
+        (...args: A3) => R3,
+        (...args: A4) => R4,
+        (...args: A5) => R5,
+        (...args: A6) => R6,
+        (...args: A7) => R7,
+        (...args: A8) => R8,
+        (...args: A9) => R9,
+        (...args: A10) => R10,
+        (...args: A11) => R11,
+        (...args: A12) => R12
+    ]
     : Overloads11<T>;
 type Overloads11<T> = T extends {
     (...args: infer A1): infer R1;
@@ -646,18 +646,18 @@ type Overloads11<T> = T extends {
     (...args: infer A11): infer R11;
 }
     ? [
-          (...args: A1) => R1,
-          (...args: A2) => R2,
-          (...args: A3) => R3,
-          (...args: A4) => R4,
-          (...args: A5) => R5,
-          (...args: A6) => R6,
-          (...args: A7) => R7,
-          (...args: A8) => R8,
-          (...args: A9) => R9,
-          (...args: A10) => R10,
-          (...args: A11) => R11
-      ]
+        (...args: A1) => R1,
+        (...args: A2) => R2,
+        (...args: A3) => R3,
+        (...args: A4) => R4,
+        (...args: A5) => R5,
+        (...args: A6) => R6,
+        (...args: A7) => R7,
+        (...args: A8) => R8,
+        (...args: A9) => R9,
+        (...args: A10) => R10,
+        (...args: A11) => R11
+    ]
     : Overloads10<T>;
 type Overloads10<T> = T extends {
     (...args: infer A1): infer R1;
@@ -672,17 +672,17 @@ type Overloads10<T> = T extends {
     (...args: infer A10): infer R10;
 }
     ? [
-          (...args: A1) => R1,
-          (...args: A2) => R2,
-          (...args: A3) => R3,
-          (...args: A4) => R4,
-          (...args: A5) => R5,
-          (...args: A6) => R6,
-          (...args: A7) => R7,
-          (...args: A8) => R8,
-          (...args: A9) => R9,
-          (...args: A10) => R10
-      ]
+        (...args: A1) => R1,
+        (...args: A2) => R2,
+        (...args: A3) => R3,
+        (...args: A4) => R4,
+        (...args: A5) => R5,
+        (...args: A6) => R6,
+        (...args: A7) => R7,
+        (...args: A8) => R8,
+        (...args: A9) => R9,
+        (...args: A10) => R10
+    ]
     : Overloads9<T>;
 type Overloads9<T> = T extends {
     (...args: infer A1): infer R1;
@@ -696,16 +696,16 @@ type Overloads9<T> = T extends {
     (...args: infer A9): infer R9;
 }
     ? [
-          (...args: A1) => R1,
-          (...args: A2) => R2,
-          (...args: A3) => R3,
-          (...args: A4) => R4,
-          (...args: A5) => R5,
-          (...args: A6) => R6,
-          (...args: A7) => R7,
-          (...args: A8) => R8,
-          (...args: A9) => R9
-      ]
+        (...args: A1) => R1,
+        (...args: A2) => R2,
+        (...args: A3) => R3,
+        (...args: A4) => R4,
+        (...args: A5) => R5,
+        (...args: A6) => R6,
+        (...args: A7) => R7,
+        (...args: A8) => R8,
+        (...args: A9) => R9
+    ]
     : Overloads8<T>;
 type Overloads8<T> = T extends {
     (...args: infer A1): infer R1;
@@ -718,15 +718,15 @@ type Overloads8<T> = T extends {
     (...args: infer A8): infer R8;
 }
     ? [
-          (...args: A1) => R1,
-          (...args: A2) => R2,
-          (...args: A3) => R3,
-          (...args: A4) => R4,
-          (...args: A5) => R5,
-          (...args: A6) => R6,
-          (...args: A7) => R7,
-          (...args: A8) => R8
-      ]
+        (...args: A1) => R1,
+        (...args: A2) => R2,
+        (...args: A3) => R3,
+        (...args: A4) => R4,
+        (...args: A5) => R5,
+        (...args: A6) => R6,
+        (...args: A7) => R7,
+        (...args: A8) => R8
+    ]
     : Overloads7<T>;
 type Overloads7<T> = T extends {
     (...args: infer A1): infer R1;
@@ -738,14 +738,14 @@ type Overloads7<T> = T extends {
     (...args: infer A7): infer R7;
 }
     ? [
-          (...args: A1) => R1,
-          (...args: A2) => R2,
-          (...args: A3) => R3,
-          (...args: A4) => R4,
-          (...args: A5) => R5,
-          (...args: A6) => R6,
-          (...args: A7) => R7
-      ]
+        (...args: A1) => R1,
+        (...args: A2) => R2,
+        (...args: A3) => R3,
+        (...args: A4) => R4,
+        (...args: A5) => R5,
+        (...args: A6) => R6,
+        (...args: A7) => R7
+    ]
     : Overloads6<T>;
 type Overloads6<T> = T extends {
     (...args: infer A1): infer R1;
@@ -756,13 +756,13 @@ type Overloads6<T> = T extends {
     (...args: infer A6): infer R6;
 }
     ? [
-          (...args: A1) => R1,
-          (...args: A2) => R2,
-          (...args: A3) => R3,
-          (...args: A4) => R4,
-          (...args: A5) => R5,
-          (...args: A6) => R6
-      ]
+        (...args: A1) => R1,
+        (...args: A2) => R2,
+        (...args: A3) => R3,
+        (...args: A4) => R4,
+        (...args: A5) => R5,
+        (...args: A6) => R6
+    ]
     : Overloads5<T>;
 type Overloads5<T> = T extends {
     (...args: infer A1): infer R1;
@@ -802,3 +802,5 @@ type Overloads1<T> = T extends {
 type UnionToIntersection<T> = (T extends unknown ? (x: T) => unknown : never) extends (x: infer R) => unknown
     ? R
     : never;
+
+export type { IRpcWebSocketTransport };
