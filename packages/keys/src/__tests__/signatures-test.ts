@@ -1,7 +1,7 @@
 import { Encoder } from '@solana/codecs-core';
 import { getBase58Encoder } from '@solana/codecs-strings';
 
-import { SignatureBytes, signBytes, verifySignature } from '../signatures';
+import { SignatureBytes, signBytes, verifySignature } from '../signatures.js';
 
 jest.mock('@solana/codecs-strings', () => ({
     ...jest.requireActual('@solana/codecs-strings'),
