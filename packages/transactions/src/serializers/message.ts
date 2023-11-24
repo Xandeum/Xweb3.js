@@ -11,20 +11,20 @@ import {
 import { getShortU16Decoder, getShortU16Encoder } from '@solana/codecs-numbers';
 import { getBase58Decoder, getBase58Encoder, getStringDecoder, getStringEncoder } from '@solana/codecs-strings';
 
-import { getCompiledAddressTableLookups } from '../compile-address-table-lookups';
-import { CompiledMessage } from '../message';
-import { SerializedMessageBytes } from '../types';
-import { getAddressTableLookupDecoder, getAddressTableLookupEncoder } from './address-table-lookup';
-import { getMessageHeaderDecoder, getMessageHeaderEncoder } from './header';
-import { getInstructionDecoder, getInstructionEncoder } from './instruction';
-import { getTransactionVersionDecoder, getTransactionVersionEncoder } from './transaction-version';
+import { getCompiledAddressTableLookups } from '../compile-address-table-lookups.js';
+import { CompiledMessage } from '../message.js';
+import { SerializedMessageBytes } from '../types.js';
+import { getAddressTableLookupDecoder, getAddressTableLookupEncoder } from './address-table-lookup.js';
+import { getMessageHeaderDecoder, getMessageHeaderEncoder } from './header.js';
+import { getInstructionDecoder, getInstructionEncoder } from './instruction.js';
+import { getTransactionVersionDecoder, getTransactionVersionEncoder } from './transaction-version.js';
 
 const staticAccountsDescription = __DEV__
     ? 'A compact-array of static account addresses belonging to this transaction'
     : 'staticAccounts';
 const lifetimeTokenDescription = __DEV__
     ? 'A 32-byte token that specifies the lifetime of this transaction (eg. a ' +
-      'recent blockhash, or a durable nonce)'
+    'recent blockhash, or a durable nonce)'
     : 'lifetimeToken';
 const instructionsDescription = __DEV__
     ? 'A compact-array of instructions belonging to this transaction'

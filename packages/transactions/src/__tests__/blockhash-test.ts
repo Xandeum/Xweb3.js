@@ -3,9 +3,9 @@ import 'test-matchers/toBeFrozenObject';
 import { Encoder } from '@solana/codecs-core';
 import { getBase58Encoder } from '@solana/codecs-strings';
 
-import { Blockhash, ITransactionWithBlockhashLifetime, setTransactionLifetimeUsingBlockhash } from '../blockhash';
-import { ITransactionWithSignatures } from '../signatures';
-import { BaseTransaction } from '../types';
+import { Blockhash, ITransactionWithBlockhashLifetime, setTransactionLifetimeUsingBlockhash } from '../blockhash.js';
+import { ITransactionWithSignatures } from '../signatures.js';
+import { BaseTransaction } from '../types/index.js';
 
 jest.mock('@solana/codecs-strings', () => ({
     ...jest.requireActual('@solana/codecs-strings'),
