@@ -7,9 +7,9 @@ import DataLoader from 'dataloader';
 import fastStableStringify from 'fast-stable-stringify';
 import { GraphQLResolveInfo } from 'graphql';
 
-import type { Rpc } from '../context';
-import { AccountQueryArgs } from '../schema/account';
-import { onlyPresentFieldRequested } from './common/resolve-info';
+import type { Rpc } from '../context.js';
+import { AccountQueryArgs } from '../schema/account.js';
+import { onlyPresentFieldRequested } from './common/resolve-info.js';
 
 function normalizeArgs(args: AccountQueryArgs) {
     const { address, commitment, dataSlice, encoding, minContextSlot } = args;

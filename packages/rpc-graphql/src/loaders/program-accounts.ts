@@ -6,10 +6,10 @@ import DataLoader from 'dataloader';
 import fastStableStringify from 'fast-stable-stringify';
 import { GraphQLResolveInfo } from 'graphql';
 
-import type { Rpc } from '../context';
-import { ProgramAccountsQueryArgs } from '../schema/program-accounts';
-import { refineJsonParsedAccountData } from './account';
-import { onlyPresentFieldRequested } from './common/resolve-info';
+import type { Rpc } from '../context.js';
+import { ProgramAccountsQueryArgs } from '../schema/program-accounts.js';
+import { refineJsonParsedAccountData } from './account.js';
+import { onlyPresentFieldRequested } from './common/resolve-info.js';
 
 function normalizeArgs(args: ProgramAccountsQueryArgs) {
     const { commitment, dataSlice, encoding, filters, minContextSlot, programAddress } = args;

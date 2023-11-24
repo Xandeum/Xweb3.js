@@ -6,9 +6,9 @@ import DataLoader from 'dataloader';
 import fastStableStringify from 'fast-stable-stringify';
 import { GraphQLResolveInfo } from 'graphql';
 
-import type { Rpc } from '../context';
-import { TransactionQueryArgs } from '../schema/transaction';
-import { onlyPresentFieldRequested } from './common/resolve-info';
+import type { Rpc } from '../context.js';
+import { TransactionQueryArgs } from '../schema/transaction.js';
+import { onlyPresentFieldRequested } from './common/resolve-info.js';
 
 function normalizeArgs(args: TransactionQueryArgs) {
     const { commitment, encoding, signature } = args;

@@ -3,7 +3,7 @@ import { createHttpTransport, createJsonRpc } from '@solana/rpc-transport';
 import { Rpc } from '@solana/rpc-transport/dist/types/json-rpc-types';
 import fetchMock from 'jest-fetch-mock-fork';
 
-import { createRpcGraphQL, RpcGraphQL } from '../rpc';
+import { createRpcGraphQL, RpcGraphQL } from '../rpc.js';
 
 describe('account', () => {
     let rpc: Rpc<SolanaRpcMethods>;

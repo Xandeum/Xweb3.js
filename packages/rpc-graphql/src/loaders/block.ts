@@ -6,10 +6,10 @@ import DataLoader from 'dataloader';
 import fastStableStringify from 'fast-stable-stringify';
 import { GraphQLResolveInfo } from 'graphql';
 
-import type { Rpc } from '../context';
-import { BlockQueryArgs } from '../schema/block';
-import { onlyPresentFieldRequested } from './common/resolve-info';
-import { refineJsonParsedTransaction } from './transaction';
+import type { Rpc } from '../context.js';
+import { BlockQueryArgs } from '../schema/block.js';
+import { onlyPresentFieldRequested } from './common/resolve-info.js';
+import { refineJsonParsedTransaction } from './transaction.js';
 
 function normalizeArgs(args: BlockQueryArgs) {
     const { commitment, encoding, slot, transactionDetails } = args;

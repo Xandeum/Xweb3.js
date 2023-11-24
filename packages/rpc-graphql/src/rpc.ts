@@ -5,8 +5,8 @@ import { GetTransactionApi } from '@solana/rpc-core/dist/types/rpc-methods/getTr
 import { Rpc } from '@solana/rpc-transport/dist/types/json-rpc-types';
 import { graphql, GraphQLSchema, Source } from 'graphql';
 
-import { createSolanaGraphQLContext, RpcGraphQLContext } from './context';
-import { createSolanaGraphQLSchema } from './schema';
+import { createSolanaGraphQLContext, RpcGraphQLContext } from './context.js';
+import { createSolanaGraphQLSchema } from './schema/index.js';
 
 type RpcMethods = GetAccountInfoApi & GetBlockApi & GetProgramAccountsApi & GetTransactionApi;
 
