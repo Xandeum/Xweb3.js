@@ -1,6 +1,6 @@
 import { Signature } from '@solana/keys';
-import { SendTransactionApi } from '@solana/rpc-core/dist/types/rpc-methods/sendTransaction';
-import { Rpc } from '@solana/rpc-transport/dist/types/json-rpc-types';
+import type { SendTransactionApi } from '@solana/rpc-core';
+import type { Rpc } from '@solana/rpc-transport';
 import { Commitment, commitmentComparator } from '@solana/rpc-types';
 import {
     BaseTransaction,
@@ -28,14 +28,14 @@ interface TransactionWithBlockhashLifetimeSenderFactoryConfig {
 
 interface SendAndConfirmDurableNonceTransactionConfig
     extends SendTransactionInternalConfig,
-        SendTransactionConfigWithoutEncoding {
+    SendTransactionConfigWithoutEncoding {
     confirmDurableNonceTransaction: ReturnType<typeof createDefaultDurableNonceTransactionConfirmer>;
     transaction: SendableTransaction & IDurableNonceTransaction;
 }
 
 interface SendAndConfirmTransactionWithBlockhashLifetimeConfig
     extends SendTransactionInternalConfig,
-        SendTransactionConfigWithoutEncoding {
+    SendTransactionConfigWithoutEncoding {
     confirmRecentTransaction: ReturnType<typeof createDefaultRecentTransactionConfirmer>;
     transaction: SendableTransaction & ITransactionWithBlockhashLifetime;
 }
@@ -52,7 +52,7 @@ type SendableTransaction = BaseTransaction &
     ITransactionWithFeePayer &
     IFullySignedTransaction;
 type SendTransactionConfig = Parameters<SendTransactionApi['sendTransaction']>[1];
-interface SendTransactionConfigWithoutEncoding extends Omit<NonNullable<SendTransactionConfig>, 'encoding'> {}
+interface SendTransactionConfigWithoutEncoding extends Omit<NonNullable<SendTransactionConfig>, 'encoding'> { }
 
 function getSendTransactionConfigWithAdjustedPreflightCommitment(
     commitment: Commitment,
