@@ -2,7 +2,7 @@ import { SolanaRpcSubscriptions, SolanaRpcSubscriptionsUnstable } from '@solana/
 import { createJsonSubscriptionRpc } from '@solana/rpc-transport';
 import { RpcSubscriptions } from '@solana/rpc-transport/dist/types/json-rpc-types';
 
-import { createSolanaRpcSubscriptions, createSolanaRpcSubscriptions_UNSTABLE } from '../rpc';
+import { createSolanaRpcSubscriptions, createSolanaRpcSubscriptions_UNSTABLE } from '../rpc.js';
 
 const config = null as unknown as Omit<Parameters<typeof createJsonSubscriptionRpc>[0], 'api'>;
 

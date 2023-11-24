@@ -1,6 +1,6 @@
 import { IRpcWebSocketTransport } from '@solana/rpc-transport/dist/types/transports/transport-types';
 
-import { getCachedAbortableIterableFactory } from './cached-abortable-iterable';
+import { getCachedAbortableIterableFactory } from './cached-abortable-iterable.js';
 
 type Config = Readonly<{
     /**

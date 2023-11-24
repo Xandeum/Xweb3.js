@@ -1,6 +1,6 @@
 import { RpcSubscriptions } from '@solana/rpc-transport/dist/types/json-rpc-types';
 
-import { getRpcSubscriptionsWithSubscriptionCoalescing } from '../rpc-subscription-coalescer';
+import { getRpcSubscriptionsWithSubscriptionCoalescing } from '../rpc-subscription-coalescer.js';
 
 interface TestRpcSubscriptionNotifications {
     nonFunctionProperty: string;
