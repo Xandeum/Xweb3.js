@@ -3,7 +3,7 @@ import type { SolanaJsonRpcErrorCode } from '@solana/rpc-transport/dist/types/js
 import type { Rpc } from '@solana/rpc-transport/dist/types/json-rpc-types';
 import fetchMock from 'jest-fetch-mock-fork';
 
-import { createSolanaRpcApi, SolanaRpcMethods } from '../index';
+import { createSolanaRpcApi, SolanaRpcMethods } from '../index.js';
 
 describe('getHealth', () => {
     let rpc: Rpc<SolanaRpcMethods>;

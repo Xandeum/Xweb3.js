@@ -2,7 +2,7 @@ import { createJsonSubscriptionRpc, createWebSocketTransport } from '@solana/rpc
 import type { RpcSubscriptions } from '@solana/rpc-transport/dist/types/json-rpc-types';
 import fetchMock from 'jest-fetch-mock-fork';
 
-import { createSolanaRpcSubscriptionsApi, SolanaRpcSubscriptions } from '../index';
+import { createSolanaRpcSubscriptionsApi, SolanaRpcSubscriptions } from '../index.js';
 
 describe('slotNotifications', () => {
     let rpc: RpcSubscriptions<SolanaRpcSubscriptions>;

@@ -4,7 +4,7 @@ import { Commitment } from '@solana/rpc-types';
 import { Blockhash } from '@solana/transactions';
 import fetchMock from 'jest-fetch-mock-fork';
 
-import { createSolanaRpcApi, SolanaRpcMethods } from '../index';
+import { createSolanaRpcApi, SolanaRpcMethods } from '../index.js';
 
 describe('isBlockhashValid', () => {
     let rpc: Rpc<SolanaRpcMethods>;

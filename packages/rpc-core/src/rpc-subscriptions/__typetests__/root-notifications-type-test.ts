@@ -2,8 +2,8 @@
 
 import { PendingRpcSubscription, RpcSubscriptions } from '@solana/rpc-transport/dist/types/json-rpc-types';
 
-import { Slot } from '../../rpc-methods/common';
-import { RootNotificationsApi } from '../root-notifications';
+import { Slot } from '../../rpc-methods/common.js';
+import { RootNotificationsApi } from '../root-notifications.js';
 
 async () => {
     const rpcSubscriptions = null as unknown as RpcSubscriptions<RootNotificationsApi>;

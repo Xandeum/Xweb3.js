@@ -1,6 +1,6 @@
 import { IRpcSubscriptionsApi } from '@solana/rpc-transport/dist/types/json-rpc-types';
 
-import { createSolanaRpcSubscriptionsApi } from '../index';
+import { createSolanaRpcSubscriptionsApi } from '../index.js';
 
 interface TestRpcSubscriptionNotifications {
     thingNotifications(...args: unknown[]): unknown;

@@ -4,9 +4,9 @@ import { Address } from '@solana/addresses';
 import { Signature } from '@solana/keys';
 import { PendingRpcSubscription, RpcSubscriptions } from '@solana/rpc-transport/dist/types/json-rpc-types';
 
-import { RpcResponse } from '../../rpc-methods/common';
-import { TransactionError } from '../../transaction-error';
-import { LogsNotificationsApi } from '../logs-notifications';
+import { RpcResponse } from '../../rpc-methods/common.js';
+import { TransactionError } from '../../transaction-error.js';
+import { LogsNotificationsApi } from '../logs-notifications.js';
 
 async () => {
     const rpcSubscriptions = null as unknown as RpcSubscriptions<LogsNotificationsApi>;

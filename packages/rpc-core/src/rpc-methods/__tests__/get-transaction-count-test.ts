@@ -4,7 +4,7 @@ import type { Rpc } from '@solana/rpc-transport/dist/types/json-rpc-types';
 import { Commitment } from '@solana/rpc-types';
 import fetchMock from 'jest-fetch-mock-fork';
 
-import { createSolanaRpcApi, SolanaRpcMethods } from '../index';
+import { createSolanaRpcApi, SolanaRpcMethods } from '../index.js';
 
 describe('getTransactionCount', () => {
     let rpc: Rpc<SolanaRpcMethods>;

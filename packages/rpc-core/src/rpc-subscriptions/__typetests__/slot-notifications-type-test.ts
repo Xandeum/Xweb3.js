@@ -2,8 +2,8 @@
 
 import { RpcSubscriptions } from '@solana/rpc-transport/dist/types/json-rpc-types';
 
-import { Slot } from '../../rpc-methods/common';
-import { SolanaRpcSubscriptions } from '../index';
+import { Slot } from '../../rpc-methods/common.js';
+import { SolanaRpcSubscriptions } from '../index.js';
 
 async () => {
     const rpcSubcriptions = null as unknown as RpcSubscriptions<SolanaRpcSubscriptions>;
