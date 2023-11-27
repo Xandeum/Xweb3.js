@@ -52,6 +52,16 @@ export type TransactionInstructionCtorFields = {
 };
 
 /**
+ * List of XTransactionInstruction object fields that may be initialized at construction
+ */
+export type XTransactionInstructionCtorFields = {
+  keys: Array<AccountMeta>;
+  xKeys : Array<AccountMeta>;
+  programId: PublicKey;
+  data?: Buffer;
+};
+
+/**
  * Configuration object for Transaction.serialize()
  */
 export type SerializeConfig = {
@@ -73,6 +83,25 @@ export interface TransactionInstructionJSON {
   programId: string;
   data: number[];
 }
+
+/**
+ * @internal
+ */
+export interface XTransactionInstructionJSON {
+  keys: {
+    pubkey: string;
+    isSigner: boolean;
+    isWritable: boolean;
+  }[];
+  xKeys: {
+    pubkey: string;
+    isSigner: boolean;
+    isWritable: boolean;
+  }[];
+  programId: string;
+  data: number[];
+}
+
 
 /**
  * Transaction Instruction class
@@ -108,6 +137,62 @@ export class TransactionInstruction {
   toJSON(): TransactionInstructionJSON {
     return {
       keys: this.keys.map(({pubkey, isSigner, isWritable}) => ({
+        pubkey: pubkey.toJSON(),
+        isSigner,
+        isWritable,
+      })),
+      programId: this.programId.toJSON(),
+      data: [...this.data],
+    };
+  }
+}
+
+/**
+ * XTransaction Instruction class
+ */
+export class XTransactionInstruction {
+  /**
+   * Public keys to include in this transaction
+   * Boolean represents whether this pubkey needs to sign the transaction
+   */
+  keys: Array<AccountMeta>;
+
+   /**
+   * Public keys of xAccounts to include in this transaction
+   * Boolean represents whether this pubkey needs to sign the transaction
+   */
+   xKeys: Array<AccountMeta>;
+
+  /**
+   * Program Id to execute
+   */
+  programId: PublicKey;
+
+  /**
+   * Program input
+   */
+  data: Buffer = Buffer.alloc(0);
+
+  constructor(opts: XTransactionInstructionCtorFields) {
+    this.programId = opts.programId;
+    this.keys = opts.keys;
+    this.xKeys = opts.xKeys;
+    if (opts.data) {
+      this.data = opts.data;
+    }
+  }
+
+  /**
+   * @internal
+   */
+  toJSON(): TransactionInstructionJSON {
+    return {
+      keys: this.keys.map(({pubkey, isSigner, isWritable}) => ({
+        pubkey: pubkey.toJSON(),
+        isSigner,
+        isWritable,
+      })),
+      xKeys: this.xKeys.map(({pubkey, isSigner, isWritable}) => ({
         pubkey: pubkey.toJSON(),
         isSigner,
         isWritable,
