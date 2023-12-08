@@ -290,7 +290,7 @@ export interface XTransactionJSON {
   feePayer: string | null;
   nonceInfo: {
     nonce: string;
-    nonceInstruction: XTransactionInstructionJSON;
+    nonceInstruction: TransactionInstructionJSON;
   } | null;
   instructions: XTransactionInstructionJSON[];
   signers: string[];
@@ -1106,12 +1106,13 @@ export class XTransaction {
   /**
    * @internal
    */
+  //TO DO
   _message?: Message;
 
   /**
    * @internal
    */
-  _json?: TransactionJSON;
+  _json?: XTransactionJSON;
 
   // Construct a transaction with a blockhash and lastValidBlockHeight
   constructor(opts?: TransactionBlockhashCtor);
@@ -1167,7 +1168,7 @@ export class XTransaction {
   /**
    * @internal
    */
-  toJSON(): TransactionJSON {
+  toJSON(): XTransactionJSON {
     return {
       recentBlockhash: this.recentBlockhash || null,
       feePayer: this.feePayer ? this.feePayer.toJSON() : null,
@@ -1191,9 +1192,9 @@ export class XTransaction {
    */
   add(
     ...items: Array<
-      Transaction | TransactionInstruction | TransactionInstructionCtorFields
+      XTransaction | XTransactionInstruction | XTransactionInstructionCtorFields
     >
-  ): Transaction {
+  ): XTransaction {
     if (items.length === 0) {
       throw new Error('No instructions');
     }
@@ -1204,7 +1205,7 @@ export class XTransaction {
       } else if ('data' in item && 'programId' in item && 'keys' in item) {
         this.instructions.push(item);
       } else {
-        this.instructions.push(new TransactionInstruction(item));
+        this.instructions.push(new XTransactionInstruction(item));
       }
     });
     return this;
