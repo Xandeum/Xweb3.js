@@ -118,18 +118,21 @@ export class MessageAccountKeys {
 // Separate AccountKeys for XMessage
 export class XMessageAccountKeys {
   staticAccountKeys: Array<PublicKey>;
+  staticXAccountKeys: Array<PublicKey>;
   accountKeysFromLookups?: AccountKeysFromLookups;
 
   constructor(
     staticAccountKeys: Array<PublicKey>,
+    staticXAccountKeys: Array<PublicKey>,
     accountKeysFromLookups?: AccountKeysFromLookups,
   ) {
     this.staticAccountKeys = staticAccountKeys;
+    this.staticXAccountKeys = staticXAccountKeys;
     this.accountKeysFromLookups = accountKeysFromLookups;
   }
 
   keySegments(): Array<Array<PublicKey>> {
-    const keySegments = [this.staticAccountKeys];
+    const keySegments = [this.staticAccountKeys,this.staticXAccountKeys];
     if (this.accountKeysFromLookups) {
       keySegments.push(this.accountKeysFromLookups.writable);
       keySegments.push(this.accountKeysFromLookups.readonly);

@@ -16,7 +16,7 @@ import {
 } from './index';
 import {TransactionInstruction,XTransactionInstruction} from '../transaction';
 import {CompiledKeys,CompiledXKeys} from './compiled-keys';
-import {MessageAccountKeys} from './account-keys';
+import {MessageAccountKeys,XMessageAccountKeys} from './account-keys';
 
 /**
  * An instruction to execute by a program
@@ -430,17 +430,19 @@ export class XMessage {
     //All account 
     const compiledKeys = CompiledXKeys.compile(args.instructions, args.payerKey);
     const [header, staticAccountKeys,staticXAccountKeys] = compiledKeys.getMessageComponents();
-    const accountKeys = new XMessageAccountKeys(staticAccountKeys);
+    const accountKeys = new XMessageAccountKeys(staticAccountKeys,staticXAccountKeys);
     const instructions = accountKeys.compileInstructions(args.instructions).map(
-      (ix: MessageCompiledInstruction): CompiledInstruction => ({
+      (ix: XMessageCompiledInstruction): CompiledXInstruction => ({
         programIdIndex: ix.programIdIndex,
         accounts: ix.accountKeyIndexes,
+        xAccounts: ix.xAccountKeyIndexes,
         data: bs58.encode(ix.data),
       }),
     );
     return new XMessage({
       header,
       accountKeys: staticAccountKeys,
+      xAccountKeys: staticXAccountKeys,
       recentBlockhash: args.recentBlockhash,
       instructions,
     });
