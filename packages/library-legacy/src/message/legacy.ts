@@ -15,7 +15,7 @@ import {
   XMessageCompiledInstruction
 } from './index';
 import {TransactionInstruction,XTransactionInstruction} from '../transaction';
-import {CompiledKeys} from './compiled-keys';
+import {CompiledKeys,CompiledXKeys} from './compiled-keys';
 import {MessageAccountKeys} from './account-keys';
 
 /**
@@ -427,8 +427,9 @@ export class XMessage {
   }
 
   static compile(args: CompileLegacyXArgs): XMessage {
-    const compiledKeys = CompiledKeys.compile(args.instructions, args.payerKey);
-    const [header, staticAccountKeys] = compiledKeys.getMessageComponents();
+    //All account 
+    const compiledKeys = CompiledXKeys.compile(args.instructions, args.payerKey);
+    const [header, staticAccountKeys,] = compiledKeys.getMessageComponents();
     const accountKeys = new MessageAccountKeys(staticAccountKeys);
     const instructions = accountKeys.compileInstructions(args.instructions).map(
       (ix: MessageCompiledInstruction): CompiledInstruction => ({
@@ -437,7 +438,7 @@ export class XMessage {
         data: bs58.encode(ix.data),
       }),
     );
-    return new Message({
+    return new XMessage({
       header,
       accountKeys: staticAccountKeys,
       recentBlockhash: args.recentBlockhash,
