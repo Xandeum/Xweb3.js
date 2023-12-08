@@ -483,14 +483,17 @@ export class XMessage {
     return this.accountKeys.filter((_, index) => !this.isProgramId(index));
   }
 
+  // todo
   serialize(): Buffer {
     const numKeys = this.accountKeys.length;
     const numXKeys = this.xAccountKeys.length;
 
     let keyCount: number[] = [];
+    // 
     let keyXCount: number[] = [];
 
     shortvec.encodeLength(keyCount, numKeys);
+    // 
     shortvec.encodeLength(keyXCount, numXKeys);
 
 
@@ -512,6 +515,7 @@ export class XMessage {
         programIdIndex,
         keyIndicesCount: Buffer.from(keyIndicesCount),
         keyIndices: accounts,
+        //
         xKeyIndicesCount: Buffer.from(xKeyIndicesCount),
         xKeyIndices: xAccounts,
         dataLength: Buffer.from(dataCount),
@@ -612,6 +616,7 @@ export class XMessage {
     return signData.slice(0, length + instructionBuffer.length);
   }
 
+  //todo
   /**
    * Decode a compiled message into a Message object.
    */
