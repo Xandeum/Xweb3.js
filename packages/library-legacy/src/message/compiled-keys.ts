@@ -266,9 +266,9 @@ export class CompiledXKeys {
     );
 
     const header: MessageHeader = {
-      numRequiredSignatures: writableSigners.length + readonlySigners.length+xWritableSigners.length + xReadonlySigners.length,
-      numReadonlySignedAccounts: readonlySigners.length+xReadonlySigners.length,
-      numReadonlyUnsignedAccounts: readonlyNonSigners.length+xReadonlyNonSigners.length,
+      numRequiredSignatures: writableSigners.length + readonlySigners.length+ xWritableSigners.length + xReadonlySigners.length,
+      numReadonlySignedAccounts: readonlySigners.length + xReadonlySigners.length,
+      numReadonlyUnsignedAccounts: readonlyNonSigners.length + xReadonlyNonSigners.length,
     };
 
     // sanity checks

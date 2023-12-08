@@ -452,6 +452,7 @@ export class XMessage {
     return index < this.header.numRequiredSignatures;
   }
 
+  //todo
   isAccountWritable(index: number): boolean {
     const numSignedAccounts = this.header.numRequiredSignatures;
     if (index >= this.header.numRequiredSignatures) {
@@ -467,30 +468,42 @@ export class XMessage {
     }
   }
 
+  //noting to do
   isProgramId(index: number): boolean {
     return this.indexToProgramIds.has(index);
   }
 
+  //noting to do
   programIds(): PublicKey[] {
     return [...this.indexToProgramIds.values()];
   }
 
+  //todo
   nonProgramIds(): PublicKey[] {
     return this.accountKeys.filter((_, index) => !this.isProgramId(index));
   }
 
   serialize(): Buffer {
     const numKeys = this.accountKeys.length;
+    const numXKeys = this.xAccountKeys.length;
 
     let keyCount: number[] = [];
+    let keyXCount: number[] = [];
+
     shortvec.encodeLength(keyCount, numKeys);
+    shortvec.encodeLength(keyXCount, numXKeys);
+
 
     const instructions = this.instructions.map(instruction => {
-      const {accounts, programIdIndex} = instruction;
+      const {accounts,xAccounts, programIdIndex} = instruction;
       const data = Array.from(bs58.decode(instruction.data));
 
       let keyIndicesCount: number[] = [];
       shortvec.encodeLength(keyIndicesCount, accounts.length);
+
+      // for xAccounts
+      let xKeyIndicesCount: number[] = [];
+      shortvec.encodeLength(xKeyIndicesCount, xAccounts.length);
 
       let dataCount: number[] = [];
       shortvec.encodeLength(dataCount, data.length);
@@ -499,6 +512,8 @@ export class XMessage {
         programIdIndex,
         keyIndicesCount: Buffer.from(keyIndicesCount),
         keyIndices: accounts,
+        xKeyIndicesCount: Buffer.from(xKeyIndicesCount),
+        xKeyIndices: xAccounts,
         dataLength: Buffer.from(dataCount),
         data,
       };
@@ -515,13 +530,23 @@ export class XMessage {
         Readonly<{
           data: number[];
           dataLength: Uint8Array;
+          xKeyIndices: number[];
+          xKeyIndicesCount: Uint8Array;
           keyIndices: number[];
           keyIndicesCount: Uint8Array;
           programIdIndex: number;
         }>
       >([
         BufferLayout.u8('programIdIndex'),
-
+        BufferLayout.blob(
+          instruction.xKeyIndicesCount.length,
+          'xKeyIndicesCount',
+        ),
+        BufferLayout.seq(
+          BufferLayout.u8('xKeyIndex'),
+          instruction.xKeyIndices.length,
+          'xKeyIndices',
+        ),
         BufferLayout.blob(
           instruction.keyIndicesCount.length,
           'keyIndicesCount',
@@ -547,6 +572,7 @@ export class XMessage {
     });
     instructionBuffer = instructionBuffer.slice(0, instructionBufferLength);
 
+    //todo
     const signDataLayout = BufferLayout.struct<
       Readonly<{
         keyCount: Uint8Array;
@@ -573,6 +599,8 @@ export class XMessage {
       numReadonlyUnsignedAccounts: Buffer.from([
         this.header.numReadonlyUnsignedAccounts,
       ]),
+      keyXCount: Buffer.from(keyXCount),
+      xKeys: this.xAccountKeys.map(key => toBuffer(key.toBytes())),
       keyCount: Buffer.from(keyCount),
       keys: this.accountKeys.map(key => toBuffer(key.toBytes())),
       recentBlockhash: bs58.decode(this.recentBlockhash),
