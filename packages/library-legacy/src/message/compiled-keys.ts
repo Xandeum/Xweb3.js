@@ -57,60 +57,7 @@ export class CompiledKeys {
     return new CompiledKeys(payer, keyMetaMap);
   }
 
-  static xCompile(
-    instructions: Array<XTransactionInstruction>,
-    payer: PublicKey,
-  ): CompiledKeys {
-    const keyMetaMap: KeyMetaMap = new Map();
-    const xKeyMetaMap: KeyMetaMap = new Map();
-    const getOrInsertDefault = (pubkey: PublicKey): CompiledKeyMeta => {
-      const address = pubkey.toBase58();
-      let keyMeta = keyMetaMap.get(address);
-      if (keyMeta === undefined) {
-        keyMeta = {
-          isSigner: false,
-          isWritable: false,
-          isInvoked: false,
-        };
-        keyMetaMap.set(address, keyMeta);
-      }
-      return keyMeta;
-    };
-    //Function to get the same key meta array for xKeys
-    const xGetOrInsertDefault = (pubkey: PublicKey): CompiledKeyMeta => {
-      const address = pubkey.toBase58();
-      let keyMeta = xKeyMetaMap.get(address);
-      if (keyMeta === undefined) {
-        keyMeta = {
-          isSigner: false,
-          isWritable: false,
-          isInvoked: false,
-        };
-        xKeyMetaMap.set(address, keyMeta);
-      }
-      return keyMeta;
-    };
-
-    const payerKeyMeta = getOrInsertDefault(payer);
-    payerKeyMeta.isSigner = true;
-    payerKeyMeta.isWritable = true;
-
-    for (const ix of instructions) {
-      getOrInsertDefault(ix.programId).isInvoked = true;
-      for (const accountMeta of ix.keys) {
-        const keyMeta = getOrInsertDefault(accountMeta.pubkey);
-        keyMeta.isSigner ||= accountMeta.isSigner;
-        keyMeta.isWritable ||= accountMeta.isWritable;
-      }
-      for (const accountMeta of ix.xKeys) {
-        const keyMeta = xGetOrInsertDefault(accountMeta.pubkey);
-        keyMeta.isSigner ||= accountMeta.isSigner;
-        keyMeta.isWritable ||= accountMeta.isWritable;
-      }
-    }
-
-    return new CompiledKeys(payer, keyMetaMap,xKeyMetaMap);
-  }
+  
 
   getMessageComponents(): [MessageHeader, Array<PublicKey>] {
     const mapEntries = [...this.keyMetaMap.entries()];
@@ -285,12 +232,12 @@ export class CompiledXKeys {
     return new CompiledXKeys(payer, keyMetaMap,xKeyMetaMap);
   }
 
-  getMessageComponents(): [MessageHeader, Array<PublicKey>] {
+  getMessageComponents(): [MessageHeader, Array<PublicKey>,Array<PublicKey>] {
     const mapEntries = [...this.keyMetaMap.entries()];
     const xMapEntries = [...this.xKeyMetaMap.entries()];
     
     assert(mapEntries.length <= 256, 'Max static account keys length exceeded');
-
+    assert(xMapEntries.length<=256,'Max static x account keys length exceeded')
     const writableSigners = mapEntries.filter(
       ([, meta]) => meta.isSigner && meta.isWritable,
     );
@@ -303,11 +250,25 @@ export class CompiledXKeys {
     const readonlyNonSigners = mapEntries.filter(
       ([, meta]) => !meta.isSigner && !meta.isWritable,
     );
+    
+    //for the x key filters and add in the header counts
+    const xWritableSigners = xMapEntries.filter(
+      ([, meta]) => meta.isSigner && meta.isWritable,
+    );
+    const xReadonlySigners = xMapEntries.filter(
+      ([, meta]) => meta.isSigner && !meta.isWritable,
+    );
+    const xWritableNonSigners = xMapEntries.filter(
+      ([, meta]) => !meta.isSigner && meta.isWritable,
+    );
+    const xReadonlyNonSigners = xMapEntries.filter(
+      ([, meta]) => !meta.isSigner && !meta.isWritable,
+    );
 
     const header: MessageHeader = {
-      numRequiredSignatures: writableSigners.length + readonlySigners.length,
-      numReadonlySignedAccounts: readonlySigners.length,
-      numReadonlyUnsignedAccounts: readonlyNonSigners.length,
+      numRequiredSignatures: writableSigners.length + readonlySigners.length+xWritableSigners.length + xReadonlySigners.length,
+      numReadonlySignedAccounts: readonlySigners.length+xReadonlySigners.length,
+      numReadonlyUnsignedAccounts: readonlyNonSigners.length+xReadonlyNonSigners.length,
     };
 
     // sanity checks
@@ -331,12 +292,14 @@ export class CompiledXKeys {
     ];
 
     const staticXAccountKeys = [
-      this.xKeyMetaMap.forEach(()=>{
-     
-      })
+      ...xWritableSigners.map(([address]) => new PublicKey(address)),
+      ...xReadonlySigners.map(([address]) => new PublicKey(address)),
+      ...xWritableNonSigners.map(([address]) => new PublicKey(address)),
+      ...xReadonlyNonSigners.map(([address]) => new PublicKey(address)),
+    
     ]
 
-    return [header, staticAccountKeys];
+    return [header, staticAccountKeys,staticXAccountKeys];
   }
 
   extractTableLookup(

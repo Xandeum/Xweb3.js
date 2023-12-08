@@ -429,8 +429,8 @@ export class XMessage {
   static compile(args: CompileLegacyXArgs): XMessage {
     //All account 
     const compiledKeys = CompiledXKeys.compile(args.instructions, args.payerKey);
-    const [header, staticAccountKeys,] = compiledKeys.getMessageComponents();
-    const accountKeys = new MessageAccountKeys(staticAccountKeys);
+    const [header, staticAccountKeys,staticXAccountKeys] = compiledKeys.getMessageComponents();
+    const accountKeys = new XMessageAccountKeys(staticAccountKeys);
     const instructions = accountKeys.compileInstructions(args.instructions).map(
       (ix: MessageCompiledInstruction): CompiledInstruction => ({
         programIdIndex: ix.programIdIndex,
