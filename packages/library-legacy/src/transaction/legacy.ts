@@ -12,6 +12,7 @@ import type {Signer} from '../keypair';
 import type {Blockhash} from '../blockhash';
 import type {CompiledInstruction} from '../message';
 import {sign, verify} from '../utils/ed25519';
+import { XMessage } from '../message/legacy';
 
 /**
  * Transaction signature as base-58 encoded string
@@ -1107,7 +1108,7 @@ export class XTransaction {
    * @internal
    */
   //TO DO
-  _message?: Message;
+  _message?: XMessage;
 
   /**
    * @internal
