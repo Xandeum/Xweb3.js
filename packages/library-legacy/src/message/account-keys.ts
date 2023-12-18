@@ -76,23 +76,63 @@ export class MessageAccountKeys {
       };
     });
   }
+
+  //compiling XInstructions
+  compileXInstructions(
+    instructions: Array<XTransactionInstruction>,
+  ): Array<XMessageCompiledInstruction> {
+    // Bail early if any account indexes would overflow a u8
+    const U8_MAX = 255;
+    if (this.length > U8_MAX + 1) {
+      throw new Error('Account index overflow encountered during compilation');
+    }
+
+    const keyIndexMap = new Map();
+    this.keySegments()
+      .flat()
+      .forEach((key, index) => {
+        keyIndexMap.set(key.toBase58(), index);
+      });
+
+    const findKeyIndex = (key: PublicKey) => {
+      const keyIndex = keyIndexMap.get(key.toBase58());
+      if (keyIndex === undefined)
+        throw new Error(
+          'Encountered an unknown instruction account key during compilation',
+        );
+      return keyIndex;
+    };
+
+    return instructions.map((instruction): MessageCompiledInstruction => {
+      return {
+        programIdIndex: findKeyIndex(instruction.programId),
+        accountKeyIndexes: instruction.keys.map(meta =>
+          findKeyIndex(meta.pubkey),
+        ),
+        data: instruction.data,
+      };
+    });
+  }
 }
 
 // Separate AccountKeys for XMessage
 export class XMessageAccountKeys {
   staticAccountKeys: Array<PublicKey>;
+  staticXAccountKeys: Array<PublicKey>;
   accountKeysFromLookups?: AccountKeysFromLookups;
 
   constructor(
     staticAccountKeys: Array<PublicKey>,
+    staticXAccountKeys: Array<PublicKey>,
     accountKeysFromLookups?: AccountKeysFromLookups,
   ) {
     this.staticAccountKeys = staticAccountKeys;
+    this.staticXAccountKeys = staticXAccountKeys;
     this.accountKeysFromLookups = accountKeysFromLookups;
   }
 
   keySegments(): Array<Array<PublicKey>> {
-    const keySegments = [this.staticAccountKeys];
+    const keySegments = [this.staticAccountKeys,this.staticXAccountKeys];
     if (this.accountKeysFromLookups) {
       keySegments.push(this.accountKeysFromLookups.writable);
       keySegments.push(this.accountKeysFromLookups.readonly);
