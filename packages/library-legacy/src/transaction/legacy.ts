@@ -226,6 +226,17 @@ export type TransactionCtorFields_DEPRECATED = {
   recentBlockhash?: Blockhash;
 };
 
+export type XTransactionCtorFields_DEPRECATED = {
+  /** Optional nonce information used for offline nonce'd transactions */
+  nonceInfo?: XNonceInformation | null;
+  /** The transaction fee payer */
+  feePayer?: PublicKey | null;
+  /** One or more signatures */
+  signatures?: Array<SignaturePubkeyPair>;
+  /** A recent blockhash */
+  recentBlockhash?: Blockhash;
+};
+
 // For backward compatibility; an unfortunate consequence of being
 // forced to over-export types by the documentation generator.
 // See https://github.com/solana-labs/solana/pull/25820
@@ -259,6 +270,15 @@ export type TransactionNonceCtor = {
   signatures?: Array<SignaturePubkeyPair>;
 };
 
+export type XTransactionNonceCtor = {
+  /** The transaction fee payer */
+  feePayer?: PublicKey | null;
+  minContextSlot: number;
+  nonceInfo: XNonceInformation;
+  /** One or more signatures */
+  signatures?: Array<SignaturePubkeyPair>;
+};
+
 /**
  * Nonce information to be used to build an offline Transaction.
  */
@@ -267,6 +287,13 @@ export type NonceInformation = {
   nonce: Blockhash;
   /** AdvanceNonceAccount Instruction */
   nonceInstruction: TransactionInstruction;
+};
+
+export type XNonceInformation = {
+  /** The current blockhash stored in the nonce */
+  nonce: Blockhash;
+  /** AdvanceNonceAccount Instruction */
+  nonceInstruction: XTransactionInstruction;
 };
 
 /**
@@ -1093,7 +1120,7 @@ export class XTransaction {
    * Optional Nonce information. If populated, transaction will use a durable
    * Nonce hash instead of a recentBlockhash. Must be populated by the caller
    */
-  nonceInfo?: NonceInformation;
+  nonceInfo?: XNonceInformation;
 
   /**
    * If this is a nonce transaction this represents the minimum slot from which
@@ -1119,13 +1146,13 @@ export class XTransaction {
   constructor(opts?: TransactionBlockhashCtor);
 
   // Construct a transaction using a durable nonce
-  constructor(opts?: TransactionNonceCtor);
+  constructor(opts?: XTransactionNonceCtor);
 
   /**
    * @deprecated `TransactionCtorFields` has been deprecated and will be removed in a future version.
    * Please supply a `TransactionBlockhashCtor` instead.
    */
-  constructor(opts?: TransactionCtorFields_DEPRECATED);
+  constructor(opts?: XTransactionCtorFields_DEPRECATED);
 
   /**
    * Construct an empty Transaction
@@ -1133,7 +1160,7 @@ export class XTransaction {
   constructor(
     opts?:
       | TransactionBlockhashCtor
-      | TransactionNonceCtor
+      | XTransactionNonceCtor
       | TransactionCtorFields_DEPRECATED,
   ) {
     if (!opts) {
@@ -1146,7 +1173,7 @@ export class XTransaction {
       this.signatures = opts.signatures;
     }
     if (Object.prototype.hasOwnProperty.call(opts, 'nonceInfo')) {
-      const {minContextSlot, nonceInfo} = opts as TransactionNonceCtor;
+      const {minContextSlot, nonceInfo} = opts as XTransactionNonceCtor;
       this.minNonceContextSlot = minContextSlot;
       this.nonceInfo = nonceInfo;
     } else if (
@@ -1158,7 +1185,7 @@ export class XTransaction {
       this.lastValidBlockHeight = lastValidBlockHeight;
     } else {
       const {recentBlockhash, nonceInfo} =
-        opts as TransactionCtorFields_DEPRECATED;
+        opts as XTransactionCtorFields_DEPRECATED;
       if (nonceInfo) {
         this.nonceInfo = nonceInfo;
       }
@@ -1189,7 +1216,7 @@ export class XTransaction {
   /**
    * Add one or more instructions to this Transaction
    *
-   * @param {Array< Transaction | TransactionInstruction | TransactionInstructionCtorFields >} items - Instructions to add to the Transaction
+   * @param {Array< XTransaction | XTransactionInstruction | XTransactionInstructionCtorFields >} items - Instructions to add to the Transaction
    */
   add(
     ...items: Array<
@@ -1215,7 +1242,7 @@ export class XTransaction {
   /**
    * Compile transaction data
    */
-  compileMessage(): Message {
+  compileMessage(): XMessage {
     if (
       this._message &&
       JSON.stringify(this.toJSON()) === JSON.stringify(this._json)
@@ -1224,7 +1251,7 @@ export class XTransaction {
     }
 
     let recentBlockhash;
-    let instructions: TransactionInstruction[];
+    let instructions: XTransactionInstruction[];
     if (this.nonceInfo) {
       recentBlockhash = this.nonceInfo.nonce;
       if (this.instructions[0] != this.nonceInfo.nonceInstruction) {
@@ -1264,9 +1291,17 @@ export class XTransaction {
 
     const programIds: string[] = [];
     const accountMetas: AccountMeta[] = [];
+    // for x account keys
+    const xAccountMetas: AccountMeta[] = [];
+
     instructions.forEach(instruction => {
       instruction.keys.forEach(accountMeta => {
         accountMetas.push({...accountMeta});
+      });
+
+      // for xkeys
+      instruction.xKeys.forEach(accountMeta => {
+        xAccountMetas.push({...accountMeta});
       });
 
       const programId = instruction.programId.toString();
@@ -1278,6 +1313,12 @@ export class XTransaction {
     // Append programID account metas
     programIds.forEach(programId => {
       accountMetas.push({
+        pubkey: new PublicKey(programId),
+        isSigner: false,
+        isWritable: false,
+      });
+      // for x account keys
+      xAccountMetas.push({
         pubkey: new PublicKey(programId),
         isSigner: false,
         isWritable: false,
@@ -1325,6 +1366,48 @@ export class XTransaction {
         .localeCompare(y.pubkey.toBase58(), 'en', options);
     });
 
+    
+    // Cull duplicate xaccount metas
+    const xUniqueMetas: AccountMeta[] = [];
+    xAccountMetas.forEach(accountMeta => {
+      const pubkeyString = accountMeta.pubkey.toString();
+      const uniqueIndex = xUniqueMetas.findIndex(x => {
+        return x.pubkey.toString() === pubkeyString;
+      });
+      if (uniqueIndex > -1) {
+        xUniqueMetas[uniqueIndex].isWritable =
+          xUniqueMetas[uniqueIndex].isWritable || accountMeta.isWritable;
+        xUniqueMetas[uniqueIndex].isSigner =
+          xUniqueMetas[uniqueIndex].isSigner || accountMeta.isSigner;
+      } else {
+        xUniqueMetas.push(accountMeta);
+      }
+    });
+
+    // Sort. Prioritizing first by signer, then by writable
+    xUniqueMetas.sort(function (x, y) {
+      if (x.isSigner !== y.isSigner) {
+        // Signers always come before non-signers
+        return x.isSigner ? -1 : 1;
+      }
+      if (x.isWritable !== y.isWritable) {
+        // Writable accounts always come before read-only accounts
+        return x.isWritable ? -1 : 1;
+      }
+      // Otherwise, sort by pubkey, stringwise.
+      const options = {
+        localeMatcher: 'best fit',
+        usage: 'sort',
+        sensitivity: 'variant',
+        ignorePunctuation: false,
+        numeric: false,
+        caseFirst: 'lower',
+      } as Intl.CollatorOptions;
+      return x.pubkey
+        .toBase58()
+        .localeCompare(y.pubkey.toBase58(), 'en', options);
+    });
+
     // Move fee payer to the front
     const feePayerIndex = uniqueMetas.findIndex(x => {
       return x.pubkey.equals(feePayer);
@@ -1342,6 +1425,21 @@ export class XTransaction {
       });
     }
 
+    // Move fee payer to the front in x
+    // to ckeck **********
+    if (feePayerIndex > -1) {
+      const [payerMeta] = xUniqueMetas.splice(feePayerIndex, 1);
+      payerMeta.isSigner = true;
+      payerMeta.isWritable = true;
+      xUniqueMetas.unshift(payerMeta);
+    } else {
+      xUniqueMetas.unshift({
+        pubkey: feePayer,
+        isSigner: true,
+        isWritable: true,
+      });
+    }
+
     // Disallow unknown signers
     for (const signature of this.signatures) {
       const uniqueIndex = uniqueMetas.findIndex(x => {
@@ -1350,6 +1448,25 @@ export class XTransaction {
       if (uniqueIndex > -1) {
         if (!uniqueMetas[uniqueIndex].isSigner) {
           uniqueMetas[uniqueIndex].isSigner = true;
+          console.warn(
+            'Transaction references a signature that is unnecessary, ' +
+              'only the fee payer and instruction signer accounts should sign a transaction. ' +
+              'This behavior is deprecated and will throw an error in the next major version release.',
+          );
+        }
+      } else {
+        throw new Error(`unknown signer: ${signature.publicKey.toString()}`);
+      }
+    }
+
+    // Disallow unknown signers in x
+    for (const signature of this.signatures) {
+      const uniqueIndex = xUniqueMetas.findIndex(x => {
+        return x.pubkey.equals(signature.publicKey);
+      });
+      if (uniqueIndex > -1) {
+        if (!xUniqueMetas[uniqueIndex].isSigner) {
+          xUniqueMetas[uniqueIndex].isSigner = true;
           console.warn(
             'Transaction references a signature that is unnecessary, ' +
               'only the fee payer and instruction signer accounts should sign a transaction. ' +
@@ -1417,7 +1534,7 @@ export class XTransaction {
   /**
    * @internal
    */
-  _compile(): Message {
+  _compile(): XMessage {
     const message = this.compileMessage();
     const signedKeys = message.accountKeys.slice(
       0,
