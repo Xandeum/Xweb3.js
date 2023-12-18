@@ -490,11 +490,11 @@ export class XMessage {
 
     let keyCount: number[] = [];
     // 
-    let keyXCount: number[] = [];
+    let xKeyCount: number[] = [];
 
     shortvec.encodeLength(keyCount, numKeys);
     // 
-    shortvec.encodeLength(keyXCount, numXKeys);
+    shortvec.encodeLength(xKeyCount, numXKeys);
 
 
     const instructions = this.instructions.map(instruction => {
@@ -534,23 +534,14 @@ export class XMessage {
         Readonly<{
           data: number[];
           dataLength: Uint8Array;
-          xKeyIndices: number[];
-          xKeyIndicesCount: Uint8Array;
           keyIndices: number[];
           keyIndicesCount: Uint8Array;
+          xKeyIndices: number[];
+          xKeyIndicesCount: Uint8Array;
           programIdIndex: number;
         }>
       >([
         BufferLayout.u8('programIdIndex'),
-        BufferLayout.blob(
-          instruction.xKeyIndicesCount.length,
-          'xKeyIndicesCount',
-        ),
-        BufferLayout.seq(
-          BufferLayout.u8('xKeyIndex'),
-          instruction.xKeyIndices.length,
-          'xKeyIndices',
-        ),
         BufferLayout.blob(
           instruction.keyIndicesCount.length,
           'keyIndicesCount',
@@ -559,6 +550,15 @@ export class XMessage {
           BufferLayout.u8('keyIndex'),
           instruction.keyIndices.length,
           'keyIndices',
+        ),
+        BufferLayout.blob(
+          instruction.xKeyIndicesCount.length,
+          'xKeyIndicesCount',
+        ),
+        BufferLayout.seq(
+          BufferLayout.u8('xKeyIndex'),
+          instruction.xKeyIndices.length,
+          'xKeyIndices',
         ),
         BufferLayout.blob(instruction.dataLength.length, 'dataLength'),
         BufferLayout.seq(
@@ -581,6 +581,8 @@ export class XMessage {
       Readonly<{
         keyCount: Uint8Array;
         keys: Uint8Array[];
+        xKeyCount: Uint8Array;
+        xKeys: Uint8Array[];
         numReadonlySignedAccounts: Uint8Array;
         numReadonlyUnsignedAccounts: Uint8Array;
         numRequiredSignatures: Uint8Array;
@@ -592,6 +594,8 @@ export class XMessage {
       BufferLayout.blob(1, 'numReadonlyUnsignedAccounts'),
       BufferLayout.blob(keyCount.length, 'keyCount'),
       BufferLayout.seq(Layout.publicKey('key'), numKeys, 'keys'),
+      BufferLayout.blob(xKeyCount.length, 'xKeyCount'),
+      BufferLayout.seq(Layout.publicKey('xKey'), numXKeys, 'xKeys'),
       Layout.publicKey('recentBlockhash'),
     ]);
 
@@ -603,10 +607,10 @@ export class XMessage {
       numReadonlyUnsignedAccounts: Buffer.from([
         this.header.numReadonlyUnsignedAccounts,
       ]),
-      keyXCount: Buffer.from(keyXCount),
-      xKeys: this.xAccountKeys.map(key => toBuffer(key.toBytes())),
       keyCount: Buffer.from(keyCount),
       keys: this.accountKeys.map(key => toBuffer(key.toBytes())),
+      xKeyCount: Buffer.from(xKeyCount),
+      xKeys: this.xAccountKeys.map(key => toBuffer(key.toBytes())),
       recentBlockhash: bs58.decode(this.recentBlockhash),
     };
 
@@ -616,11 +620,11 @@ export class XMessage {
     return signData.slice(0, length + instructionBuffer.length);
   }
 
-  //todo
+  //done 
   /**
    * Decode a compiled message into a Message object.
    */
-  static from(buffer: Buffer | Uint8Array | Array<number>): Message {
+  static from(buffer: Buffer | Uint8Array | Array<number>): XMessage {
     // Slice up wire data
     let byteArray = [...buffer];
 
@@ -644,17 +648,28 @@ export class XMessage {
       byteArray = byteArray.slice(PUBLIC_KEY_LENGTH);
       accountKeys.push(new PublicKey(Buffer.from(account)));
     }
+    //Decoding xAccounts
+    const xAccountCount = shortvec.decodeLength(byteArray);
+    let xAccountKeys = [];
+    for (let i = 0; i < xAccountCount; i++) {
+      const xAccount = byteArray.slice(0, PUBLIC_KEY_LENGTH);
+      byteArray = byteArray.slice(PUBLIC_KEY_LENGTH);
+      xAccountKeys.push(new PublicKey(Buffer.from(xAccount)));
+    }
 
     const recentBlockhash = byteArray.slice(0, PUBLIC_KEY_LENGTH);
     byteArray = byteArray.slice(PUBLIC_KEY_LENGTH);
 
     const instructionCount = shortvec.decodeLength(byteArray);
-    let instructions: CompiledInstruction[] = [];
+    let instructions: CompiledXInstruction[] = [];
     for (let i = 0; i < instructionCount; i++) {
       const programIdIndex = byteArray.shift()!;
       const accountCount = shortvec.decodeLength(byteArray);
       const accounts = byteArray.slice(0, accountCount);
       byteArray = byteArray.slice(accountCount);
+      const xAccountCount = shortvec.decodeLength(byteArray);
+      const xAccounts = byteArray.slice(0, accountCount);
+      byteArray = byteArray.slice(xAccountCount);
       const dataLength = shortvec.decodeLength(byteArray);
       const dataSlice = byteArray.slice(0, dataLength);
       const data = bs58.encode(Buffer.from(dataSlice));
@@ -662,6 +677,7 @@ export class XMessage {
       instructions.push({
         programIdIndex,
         accounts,
+        xAccounts,
         data,
       });
     }
@@ -674,9 +690,10 @@ export class XMessage {
       },
       recentBlockhash: bs58.encode(Buffer.from(recentBlockhash)),
       accountKeys,
+      xAccountKeys,
       instructions,
     };
 
-    return new Message(messageArgs);
+    return new XMessage(messageArgs);
   }
 }
