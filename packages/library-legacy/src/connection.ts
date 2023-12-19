@@ -5878,6 +5878,11 @@ export class Connection {
     options?: SendOptions,
   ): Promise<TransactionSignature> {
     const encodedTransaction = toBuffer(rawTransaction).toString('base64');
+
+    console.log(
+      'library-legacy/src/connection.ts |  sendRawTransaction | encodedTransaction:',
+      encodedTransaction,
+    );
     const result = await this.sendEncodedTransaction(
       encodedTransaction,
       options,
@@ -5911,9 +5916,22 @@ export class Connection {
       config.preflightCommitment = preflightCommitment;
     }
 
+    console.log('library-legacy/src/connection.ts |  sendEncodedTransaction |');
+
     const args = [encodedTransaction, config];
+    console.log(
+      'library-legacy/src/connection.ts |  sendEncodedTransaction | args :',
+      args,
+    );
+
     const unsafeRes = await this._rpcRequest('sendTransaction', args);
+
     const res = create(unsafeRes, SendTransactionRpcResult);
+    console.log(
+      'library-legacy/src/connection.ts |  sendEncodedTransaction | res ',
+      res,
+    );
+
     if ('error' in res) {
       let logs;
       if ('data' in res.error) {

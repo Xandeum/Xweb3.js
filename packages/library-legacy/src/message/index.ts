@@ -45,3 +45,22 @@ export type MessageCompiledInstruction = {
   /** The program input data */
   data: Uint8Array;
 };
+
+/**
+ * An instruction to execute by a program
+ *
+ * @property {number} programIdIndex
+ * @property {number[]} accountKeyIndexes
+ * @property {Uint8Array} data
+ */
+export type XMessageCompiledInstruction = {
+  /** Index into the transaction keys array indicating the program account that executes this instruction */
+  programIdIndex: number;
+  /** Ordered indices into the transaction keys array indicating which accounts to pass to the program */
+  accountKeyIndexes: number[];
+  /** Ordered indices into the transaction keys array indicating which xAccounts to pass to the program */
+  xAccountKeyIndexes: number[];
+  /** The program input data */
+  data: Uint8Array;
+};
+

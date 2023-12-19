@@ -1,6 +1,6 @@
 {
-    "name": "@solana/keys",
-    "version": "2.0.0-development",
+    "name": "@xandeum/keys",
+    "version": "2.0.0-experimental.b036381",
     "description": "Helpers for generating and transforming key material",
     "exports": {
         "browser": {
