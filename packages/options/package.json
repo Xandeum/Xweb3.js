@@ -1,6 +1,6 @@
 {
-    "name": "@xandeum/options",
-    "version": "2.0.0-experimental.b036381",
+    "name": "@solana/options",
+    "version": "2.0.0-development",
     "description": "Managing and serializing Rust-like Option types in JavaScript",
     "exports": {
         "browser": {

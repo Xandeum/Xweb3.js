@@ -1,6 +1,5 @@
 {
-  "name": "@xandeum/web3.js-bak-bak-bak",
-  "private": false,
+  "name": "@solana/web3.js",
   "version": "0.0.0-development",
   "description": "Solana Javascript API",
   "keywords": [
@@ -8,11 +7,11 @@
     "blockchain"
   ],
   "license": "MIT",
-  "author": "Team xandeum labs",
+  "author": "Solana Labs Maintainers <maintainers@solanalabs.com>",
   "homepage": "https://solana.com/",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Xandeum/Xweb3.js.git"
+    "url": "https://github.com/solana-labs/solana-web3.js.git"
   },
   "bugs": {
     "url": "http://github.com/solana-labs/solana-web3.js.git/issues"
@@ -44,11 +43,11 @@
     "build:fixtures": "set -ex; ./test/fixtures/noop-program/build.sh",
     "clean": "rimraf ./doc ./declarations ./lib",
     "dev": "cross-env NODE_ENV=development rollup -c --watch",
-    "publish-packages": "semantic-release --repository-url git@github.com:Xandeum/Xweb3.js.git",
+    "publish-packages": "semantic-release --repository-url git@github.com:solana-labs/solana-web3.js.git",
     "test:lint": "eslint src/ test/ --ext .js,.ts",
     "test:lint:fix": "eslint src/ test/ --fix --ext .js,.ts",
     "test:live": "TEST_LIVE=1 pnpm run test:unit:node",
-    
+    "test:live-with-test-validator": "start-server-and-test '../../scripts/start-shared-test-validator.sh' http://127.0.0.1:8899/health test:live",
     "test:prettier": "prettier --check '{,{src,test}/**/}*.{j,t}s'",
     "test:prettier:fix": "prettier --write '{,{src,test}/**/}*.{j,t}s'",
     "test:typecheck": "tsc --noEmit",
@@ -80,7 +79,7 @@
     "@babel/preset-env": "^7.23.3",
     "@babel/preset-typescript": "^7.23.2",
     "@rollup/plugin-alias": "^4.0.3",
-    "@rollup/plugin-babel": "^6public.0.4",
+    "@rollup/plugin-babel": "^6.0.4",
     "@rollup/plugin-commonjs": "^25.0.4",
     "@rollup/plugin-json": "^6.0.0",
     "@rollup/plugin-multi-entry": "^6.0.0",

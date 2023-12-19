@@ -1,6 +1,6 @@
 {
-    "name": "@xandeum/signers",
-    "version": "2.0.0-experimental.b036381",
+    "name": "@solana/signers",
+    "version": "2.0.0-development",
     "description": "An abstraction layer over signing messages and transactions in Solana",
     "exports": {
         "browser": {

@@ -1,6 +1,6 @@
 {
-    "name": "@xandeum/rpc-graphql",
-    "version": "2.0.0-experimental.b036381",
+    "name": "@solana/rpc-graphql",
+    "version": "2.0.0-development",
     "description": "A library for resolving GraphQl query calls to the Solana JSON RPC API",
     "exports": {
         "browser": {

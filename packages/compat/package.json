@@ -1,6 +1,6 @@
 {
-    "name": "@xandeum/compat",
-    "version": "2.0.0-experimental.b036381",
+    "name": "@solana/compat",
+    "version": "2.0.0-development",
     "description": "Helpers for converting from legacy web3js classes",
     "exports": {
         "browser": {

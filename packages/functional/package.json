@@ -1,6 +1,6 @@
 {
-    "name": "@xandeum/functional",
-    "version": "2.0.0-experimental.b036381",
+    "name": "@solana/functional",
+    "version": "2.0.0-development",
     "description": "Functional JavaScript helpers",
     "exports": {
         "browser": {
