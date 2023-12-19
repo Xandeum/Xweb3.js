@@ -1,5 +1,5 @@
 {
-    "private": false,
+    "private": true,
     "workspaces": [
         "packages/*"
     ],
@@ -7,7 +7,7 @@
         "build": "turbo run build",
         "compile": "turbo run compile:js compile:typedefs",
         "lint": "turbo run test:lint",
-        "publish-packages": "turbo run --force=true build && turbo run --continue publish-packages --force",
+        "publish-packages": "turbo run --force=true build && turbo run --continue publish-packages",
         "style:fix": "turbo run style:fix",
         "test": "turbo run test:unit:browser test:unit:node",
         "test:live-with-test-validator": "turbo run test:live-with-test-validator",
@@ -33,6 +33,5 @@
             "shelljs": ">=0.8.5"
         }
     },
-    "version": "0.0.1",
     "prettier": "@solana/prettier-config-solana"
 }

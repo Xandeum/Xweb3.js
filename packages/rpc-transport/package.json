@@ -1,6 +1,6 @@
 {
-    "name": "@xandeum/rpc-transport",
-    "version": "2.0.0-experimental.b036381",
+    "name": "@solana/rpc-transport",
+    "version": "2.0.0-development",
     "description": "Network transports for accessing the Solana JSON RPC API",
     "exports": {
         "browser": {

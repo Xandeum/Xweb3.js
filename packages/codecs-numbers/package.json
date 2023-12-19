@@ -1,6 +1,6 @@
 {
-    "name": "@xandeum/codecs-numbers",
-    "version": "2.0.0-experimental.b036381",
+    "name": "@solana/codecs-numbers",
+    "version": "2.0.0-development",
     "description": "Codecs for numbers of different sizes and endianness",
     "exports": {
         "browser": {
