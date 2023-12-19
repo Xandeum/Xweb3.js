@@ -799,6 +799,7 @@ export class Transaction {
     );
 
     const signData = this.serializeMessage();
+    console.log("sig data ", signData)
     if (
       verifySignatures &&
       !this._verifySignatures(signData, requireAllSignatures)

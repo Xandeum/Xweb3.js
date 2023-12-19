@@ -157,6 +157,7 @@ export class Message {
   }
 
   serialize(): Buffer {
+    // console.log("hulloooooooooooooooooo")
     const numKeys = this.accountKeys.length;
 
     let keyCount: number[] = [];
@@ -255,9 +256,40 @@ export class Message {
       recentBlockhash: bs58.decode(this.recentBlockhash),
     };
 
+    console.log(
+      'Number of Required Signatures:',
+      transaction.numRequiredSignatures.toString('hex'),
+    );
+    console.log(
+      'Number of Readonly Signed Accounts:',
+      transaction.numReadonlySignedAccounts.toString('hex'),
+    );
+    console.log(
+      'Number of Readonly Unsigned Accounts:',
+      transaction.numReadonlyUnsignedAccounts.toString('hex'),
+    );
+    console.log(
+      'Key Count:',
+      Buffer.from(transaction.keyCount).toString('hex'),
+    );
+
+    transaction.keys.forEach((key, index) => {
+      console.log(`Key ${index + 1}:`, Buffer.from(key).toString('hex'));
+    });
+
+    console.log(
+      'Recent Blockhash:',
+      Buffer.from(transaction.recentBlockhash).toString('hex'),
+    );
+
     let signData = Buffer.alloc(2048);
     const length = signDataLayout.encode(transaction, signData);
     instructionBuffer.copy(signData, length);
+
+    console.log(
+      'Serialized Transaction Bytes:',
+      signData.slice(0, length + instructionBuffer.length).toString('hex'),
+    );
     return signData.slice(0, length + instructionBuffer.length);
   }
 

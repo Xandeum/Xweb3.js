@@ -1,6 +1,6 @@
 {
-  "name": "@solana/web3.js",
-  "version": "0.0.0-development",
+  "name": "@xandeum/web3.js",
+  "version": "0.0.3-development",
   "description": "Solana Javascript API",
   "keywords": [
     "api",
@@ -11,7 +11,7 @@
   "homepage": "https://solana.com/",
   "repository": {
     "type": "git",
-    "url": "https://github.com/solana-labs/solana-web3.js.git"
+    "url": "https://github.com/Xandeum/Xweb3.js.git"
   },
   "bugs": {
     "url": "http://github.com/solana-labs/solana-web3.js.git/issues"
@@ -43,7 +43,7 @@
     "build:fixtures": "set -ex; ./test/fixtures/noop-program/build.sh",
     "clean": "rimraf ./doc ./declarations ./lib",
     "dev": "cross-env NODE_ENV=development rollup -c --watch",
-    "publish-packages": "semantic-release --repository-url git@github.com:solana-labs/solana-web3.js.git",
+    "publish-packages": "semantic-release --repository-url https://github.com/Xandeum/Xweb3.js.git",
     "test:lint": "eslint src/ test/ --ext .js,.ts",
     "test:lint:fix": "eslint src/ test/ --fix --ext .js,.ts",
     "test:live": "TEST_LIVE=1 pnpm run test:unit:node",
@@ -124,7 +124,6 @@
     "start-server-and-test": "^2.0.0",
     "ts-mocha": "^10.0.0",
     "ts-node": "^10.9.1",
-    "tsconfig": "workspace:*",
     "tslib": "^2.6.2",
     "typedoc": "^0.24.8",
     "typescript": "^5.1.6"
